@@ -1,4 +1,4 @@
-package view.panels;
+package view;
 
 
 import javafx.scene.control.Tab;
