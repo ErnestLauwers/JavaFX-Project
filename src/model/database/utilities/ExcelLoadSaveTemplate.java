@@ -13,8 +13,8 @@ import java.util.TreeMap;
 
 public abstract class ExcelLoadSaveTemplate<K, V> {
 
-    public Map<K, V> load(File file) {
-        Map<K, V> returnMap = new TreeMap<>();
+    public TreeMap<K, V> load(File file) {
+        TreeMap<K, V> returnMap = new TreeMap<>();
         ExcelPlugin excelPlugin = new ExcelPlugin();
         try {
             ArrayList<ArrayList<String>> rowInfo = excelPlugin.read(file);
@@ -37,7 +37,7 @@ public abstract class ExcelLoadSaveTemplate<K, V> {
             map.forEach((key, value) -> {
                 ArrayList<String> arrayString = new ArrayList<>();
                 arrayString.add(String.valueOf(key));
-                arrayString.addAll(Arrays.asList(value.toString().split(",")));
+                arrayString.addAll(Arrays.asList(value.toString().split(";")));
                 array.add(arrayString);
             });
             excelPlugin.write(file, array);

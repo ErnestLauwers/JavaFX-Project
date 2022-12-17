@@ -1,9 +1,9 @@
 package model.database.loadSaveStrategies;
 
 public enum LoadSaveStrategyEnum {
-    EXCELMETROCARD("Excel Metro Card", "model.database.loadSaveStrategies.MetroCardsExcelLoadSaveStrategy"),
-    TXTMETROCARD("Text Metro Card", "model.database.loadSaveStrategies.MetroCardsTekstLoadSaveStrategy"),
-    TXTSETTINGS("Text Settings", "model.database.loadSaveStrategies.SettingsTekstLoadSaveStrategy");
+    EXCELMETROCARD("ExcelMetroCard", "model.database.loadSaveStrategies.MetroCardsExcelLoadSaveStrategy"),
+    TXTMETROCARD("TextMetroCard", "model.database.loadSaveStrategies.MetroCardsTekstLoadSaveStrategy"),
+    SETTINGS("TextSettings", "model.database.loadSaveStrategies.SettingsTekstLoadSaveStrategy");
 
     private final String description;
     private final String className;

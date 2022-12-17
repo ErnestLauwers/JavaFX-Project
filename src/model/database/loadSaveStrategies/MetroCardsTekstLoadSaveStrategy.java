@@ -4,13 +4,14 @@ import model.MetroCard;
 import model.database.utilities.TekstLoadSaveTemplate;
 import java.io.File;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class MetroCardsTekstLoadSaveStrategy extends TekstLoadSaveTemplate implements LoadSaveStrategy {
 
     private final File file = new File("src/bestanden/metrocards.txt");
 
     @Override
-    public Map load() {
+    public TreeMap load() {
         return super.load(file);
     }
 

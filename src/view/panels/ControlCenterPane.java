@@ -1,20 +1,24 @@
 package view.panels;
 
-import javafx.scene.control.TableView;
-
+import controller.ControlCenterPaneController;
+import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
 import javafx.scene.layout.GridPane;
-import model.database.MetroCardDatabase;
+import javafx.scene.control.Button;
 
-import java.awt.*;
+public class ControlCenterPane extends GridPane {
 
-public class ControlCenterPane<MetroCard> extends GridPane {
+    private ObservableList metroCards;
+    private ControlCenterPaneController controlCenterPaneController;
+    private Button saveButton;
 
-    private MetroCardDatabase metroCardDatabase;
-    private TableView<MetroCard> table;
-    private Button openButton;
+    public ControlCenterPane(ControlCenterPaneController controlCenterPaneController) {
+        this.controlCenterPaneController = controlCenterPaneController;
+        this.setPadding(new Insets(5, 5, 5, 5));
+        this.setVgap(5);
+        this.setHgap(5);
 
-    public ControlCenterPane() {
-        this.metroCardDatabase = new MetroCardDatabase("TXTMETROCARD");
-        openButton = new Button("Open Metrostation");
+        saveButton = new Button("Open Metrostation");
+        this.add(saveButton, 55, 40);
     }
 }

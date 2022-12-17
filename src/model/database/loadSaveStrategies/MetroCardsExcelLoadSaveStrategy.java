@@ -5,13 +5,14 @@ import model.database.utilities.ExcelLoadSaveTemplate;
 
 import java.io.File;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class MetroCardsExcelLoadSaveStrategy extends ExcelLoadSaveTemplate implements LoadSaveStrategy {
 
     private final File file = new File("src/bestanden/metrocards.xls");
 
     @Override
-    public Map load() {
+    public TreeMap load() {
         return super.load(file);
     }
 

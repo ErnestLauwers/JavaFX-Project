@@ -10,7 +10,7 @@ import java.util.TreeMap;
 
 public class MetroCardDatabase {
 
-    private Map<String, MetroCard> metroCardMap;
+    private TreeMap<Integer, MetroCard> metroCardMap;
     private LoadSaveStrategy loadSaveStrategy;
     private static MetroCardDatabase instance;
 
@@ -19,10 +19,10 @@ public class MetroCardDatabase {
         setLoadSaveStrategy(LoadSaveStrategyFactory.createLoadSaveStrategy(strategy));
     }
 
-    public Map<String, Integer> getMetroCards() {
-        Map<String, Integer> activeRides = new HashMap<>();
-        for (String metroCard : metroCardMap.keySet()) {
-            activeRides.put(metroCard, metroCardMap.get(metroCard).getActiveRides());
+    public Map<Integer, Integer> getMetroCards() {
+        Map<Integer, Integer> activeRides = new HashMap<>();
+        for (int metroCardId : metroCardMap.keySet()) {
+            activeRides.put(metroCardId, metroCardMap.get(metroCardId).getActiveRides());
         }
         return activeRides;
     }
@@ -39,7 +39,7 @@ public class MetroCardDatabase {
         return instance;
     }
 
-    public Map<String, MetroCard> load() {
+    public TreeMap<Integer, MetroCard> load() {
         metroCardMap = loadSaveStrategy.load();
         return metroCardMap;
     }
