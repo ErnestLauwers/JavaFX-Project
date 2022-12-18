@@ -1,6 +1,8 @@
 package model;
 
 import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
+import jxl.read.biff.BiffException;
+import jxl.write.WriteException;
 import model.database.MetroCardDatabase;
 import model.database.loadSaveStrategies.LoadSaveStrategy;
 import model.database.loadSaveStrategies.LoadSaveStrategyFactory;
@@ -48,6 +50,17 @@ public class MetroFacade implements Subject {
         notifyObservers(MetroEventsEnum.OPEN_METROSTATION);
     }
 
+    public void buyMetroCard() throws IOException{
+        int newId = metroCardDatabase.getNewId();
+        String month = String.valueOf(LocalDate.now().getMonthValue());
+        String year = String.valueOf(LocalDate.now().getYear());
+        String dateOfCreation = month + "#" + year;
+        MetroCard newMetroCard = new MetroCard(newId, dateOfCreation, 5, 0);
+        metroCardDatabase.add(newMetroCard);
+        notifyObservers(MetroEventsEnum.BUY_METROCARD);
+        notifyObservers(MetroEventsEnum.OPEN_METROSTATION);
+    }
+
     public void setStationStatus() {
         this.statusStation =  true;
     }
@@ -75,7 +88,6 @@ public class MetroFacade implements Subject {
     @Override
     public void notifyObservers(MetroEventsEnum event) {
         for (Observer observer : observers.get(event)) {
-            System.out.println(observer);
             observer.update();
         }
     }

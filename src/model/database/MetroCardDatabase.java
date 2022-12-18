@@ -1,10 +1,13 @@
 package model.database;
 
 import application.MetroMain;
+import jxl.read.biff.BiffException;
+import jxl.write.WriteException;
 import model.database.loadSaveStrategies.LoadSaveStrategy;
 import model.database.loadSaveStrategies.LoadSaveStrategyFactory;
 import model.MetroCard;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -42,6 +45,15 @@ public class MetroCardDatabase {
             instance = new MetroCardDatabase(MetroMain.strategyMetroCard);
         }
         return instance;
+    }
+
+    public void add(MetroCard newMetroCard) throws IOException {
+        metroCardMap.put(String.valueOf(newMetroCard.getMetroCardId()), newMetroCard);
+    }
+
+    public int getNewId() {
+        int currentSize = metroCardMap.size();
+        return currentSize + 1;
     }
 
     public TreeMap<String, MetroCard> load() {

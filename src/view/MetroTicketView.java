@@ -10,8 +10,11 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import jxl.read.biff.BiffException;
+import jxl.write.WriteException;
 import model.MetroFacade;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class MetroTicketView extends GridPane {
@@ -43,6 +46,13 @@ public class MetroTicketView extends GridPane {
 
 		allIds = new ChoiceBox<>();
 		addButton = new Button("New Metro Card");
+		addButton.setOnAction(event -> {
+			try {
+				metroTicketViewController.buyMetroCard();
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+		});
 
 		allIdsGroup.getChildren().addAll(allIds);
 		newMetroCardGroup.getChildren().addAll(addButton);
