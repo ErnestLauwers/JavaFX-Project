@@ -37,7 +37,7 @@ public abstract class ExcelLoadSaveTemplate<K, V> {
             map.forEach((key, value) -> {
                 ArrayList<String> arrayString = new ArrayList<>();
                 arrayString.add(String.valueOf(key));
-                arrayString.addAll(Arrays.asList(value.toString().split(",")));
+                arrayString.addAll(Arrays.asList(value.toString().split(";")));
                 array.add(arrayString);
             });
             excelPlugin.write(file, array);
