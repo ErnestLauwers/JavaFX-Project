@@ -1,7 +1,7 @@
 package model;
 
 public interface Subject {
-    void notifyObservers(MetroEvent event);
-    void registerObserver(Observer observer);
+    void notifyObservers(MetroEventsEnum event);
+    void registerObserver(MetroEventsEnum event, Observer observer);
     void removeObserver(Observer observer);
 }

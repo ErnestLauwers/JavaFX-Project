@@ -1,13 +1,16 @@
 package application;
 
-import controller.AdminViewController;
 import javafx.application.Application;
 import javafx.stage.Stage;
-import model.Facade;
-import model.database.loadSaveStrategies.LoadSaveStrategyFactory;
+import model.MetroFacade;
 import view.AdminView;
 import view.MetroStationView;
 import view.MetroTicketView;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 
 public class MetroMain extends Application {
 
@@ -15,18 +18,26 @@ public class MetroMain extends Application {
 
 	@Override
 	public void start(Stage primaryStage) {
-		if (LoadSaveStrategyFactory.createLoadSaveStrategy("TXTSETTINGS").load().get("LoadSave").equals("Text file")) {
+		Properties properties = new Properties();
+		InputStream inputStream;
+		try {
+			inputStream = new FileInputStream("src/bestanden/settings.properties");
+			properties.load(inputStream);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+		if (properties.getProperty("LoadSaveStrategy").equals("Text File")) {
 			strategyMetroCard = "TXTMETROCARD";
 		}
-		if (LoadSaveStrategyFactory.createLoadSaveStrategy("TXTSETTINGS").load().get("LoadSave").equals("Excel file")) {
+		if (properties.getProperty("LoadSaveStrategy").equals("Excel File")) {
 			strategyMetroCard = "EXCELMETROCARD";
 		}
 
-		Facade metroFacade = new Facade();
+		MetroFacade metroFacade = new MetroFacade();
 
-		AdminView adminView = new AdminView(new AdminViewController(metroFacade));
-		MetroTicketView metroTicketView = new MetroTicketView();
-		MetroStationView metroStationView = new MetroStationView();
+		AdminView adminView = new AdminView(metroFacade);
+		MetroTicketView metroTicketView = new MetroTicketView(metroFacade);
+		MetroStationView metroStationView = new MetroStationView(metroFacade);
 	}
 
 	public static void main(String[] args) {

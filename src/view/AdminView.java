@@ -1,23 +1,22 @@
 package view;
 
-import controller.AdminViewController;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import model.MetroFacade;
 
 public class AdminView {
 	private Stage stage = new Stage();
 	private AdminMainPane adminMainPane;
 
-	public AdminView(AdminViewController controller) {
-		controller.setAdminView(this);
+	public AdminView(MetroFacade metroFacade) {
 		stage.setTitle("ADMIN VIEW");
 		stage.setX(660);
 		stage.setY(5);
 		stage.setResizable(false);
 		Group root = new Group();
 		Scene scene = new Scene(root, 690, 680);
-		adminMainPane = new AdminMainPane(controller);
+		adminMainPane = new AdminMainPane(metroFacade);
 		adminMainPane.prefHeightProperty().bind(scene.heightProperty());
 		adminMainPane.prefWidthProperty().bind(scene.widthProperty());
 		root.getChildren().add(adminMainPane);

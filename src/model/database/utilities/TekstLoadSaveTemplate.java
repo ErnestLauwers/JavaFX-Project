@@ -7,12 +7,12 @@ import java.util.TreeMap;
 
 public abstract class TekstLoadSaveTemplate<K, V> {
 
-    public Map<K, V> load(File file) {
-        Map<K, V> returnMap = new TreeMap<>();
+    public TreeMap<K, V> load(File file) {
+        TreeMap<K, V> returnMap = new TreeMap<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line = reader.readLine();
             while (line != null && !line.trim().equals("")) {
-                String[] tokens = line.split(",");
+                String[] tokens = line.split(";");
                 V element = maakObject(tokens);
                 K key = getKey(tokens);
                 returnMap.put(key, element);
@@ -29,7 +29,7 @@ public abstract class TekstLoadSaveTemplate<K, V> {
         for (HashMap.Entry<K, V> entry : map.entrySet()) {
             String key = (String) entry.getKey();
             Object value = entry.getValue();
-            builder.append(key).append(",").append(value.toString()).append("\n");
+            builder.append(key).append(";").append(value.toString()).append("\n");
         }
         try {
             FileWriter myWriter = new FileWriter(file);

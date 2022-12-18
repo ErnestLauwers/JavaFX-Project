@@ -13,8 +13,8 @@ import java.util.TreeMap;
 
 public abstract class ExcelLoadSaveTemplate<K, V> {
 
-    public Map<K, V> load(File file) {
-        Map<K, V> returnMap = new TreeMap<>();
+    public TreeMap<K, V> load(File file) {
+        TreeMap<K, V> returnMap = new TreeMap<>();
         ExcelPlugin excelPlugin = new ExcelPlugin();
         try {
             ArrayList<ArrayList<String>> rowInfo = excelPlugin.read(file);

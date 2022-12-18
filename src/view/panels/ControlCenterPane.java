@@ -1,20 +1,32 @@
 package view.panels;
 
-import javafx.scene.control.TableView;
-
+import controller.ControlCenterPaneController;
+import javafx.geometry.Insets;
 import javafx.scene.layout.GridPane;
-import model.database.MetroCardDatabase;
+import javafx.scene.control.Button;
 
-import java.awt.*;
+import java.io.IOException;
 
-public class ControlCenterPane<MetroCard> extends GridPane {
+public class ControlCenterPane extends GridPane {
 
-    private MetroCardDatabase metroCardDatabase;
-    private TableView<MetroCard> table;
-    private Button openButton;
+    private ControlCenterPaneController controlCenterPaneController;
+    private Button openMetroButton;
 
-    public ControlCenterPane() {
-        this.metroCardDatabase = new MetroCardDatabase("TXTMETROCARD");
-        openButton = new Button("Open Metrostation");
+    public ControlCenterPane(ControlCenterPaneController controlCenterPaneController) {
+        this.controlCenterPaneController = controlCenterPaneController;
+        this.setPadding(new Insets(5, 5, 5, 5));
+        this.setVgap(5);
+        this.setHgap(5);
+
+        openMetroButton = new Button("Open Metrostation");
+        this.add(openMetroButton, 55, 40);
+        openMetroButton.setOnAction(event -> {
+            try {
+                controlCenterPaneController.openMetroStation();
+                controlCenterPaneController.setStationStatus();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 }
