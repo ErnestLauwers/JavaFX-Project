@@ -24,6 +24,14 @@ public class MetroCardDatabase {
         setLoadSaveStrategy(LoadSaveStrategyFactory.createLoadSaveStrategy(strategy));
     }
 
+    public MetroCard getMetroCard(int id) {
+        for(MetroCard m : getMetroCardList()){
+            if (m.getMetroCardId() == id) {
+                return m;
+            }
+        }
+        return null;
+    }
     public ArrayList<Integer> getMetroCardIDList() {
         ArrayList<Integer> ids = new ArrayList<>();
         for (MetroCard metroCard : metroCardMap.values()) {

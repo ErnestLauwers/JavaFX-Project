@@ -3,6 +3,9 @@ package model;
 import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 import jxl.read.biff.BiffException;
 import jxl.write.WriteException;
+import model.TicketPriceDecorator.TicketPrice;
+import model.TicketPriceDecorator.TicketPriceDiscountEnum;
+import model.TicketPriceDecorator.TicketPriceFactory;
 import model.database.MetroCardDatabase;
 import model.database.loadSaveStrategies.LoadSaveStrategy;
 import model.database.loadSaveStrategies.LoadSaveStrategyFactory;
@@ -25,6 +28,7 @@ public class MetroFacade implements Subject {
         metroCardDatabase = MetroCardDatabase.getInstance();
         statusStation = false;
         loadSaveStrategyFactory = new LoadSaveStrategyFactory();
+
         for (MetroEventsEnum event :  MetroEventsEnum.values()) {
             observers.put(event, new ArrayList<Observer>());
         }
@@ -50,6 +54,10 @@ public class MetroFacade implements Subject {
         notifyObservers(MetroEventsEnum.OPEN_METROSTATION);
     }
 
+    public void closeMetroStation(){
+        metroCardDatabase.save();
+    }
+
     public void buyMetroCard() throws IOException{
         int newId = metroCardDatabase.getNewId();
         String month = String.valueOf(LocalDate.now().getMonthValue());
@@ -61,7 +69,7 @@ public class MetroFacade implements Subject {
         notifyObservers(MetroEventsEnum.OPEN_METROSTATION);
     }
 
-    public void setStationStatus() {
+    public void setStationStatus( ) {
         this.statusStation =  true;
     }
 
@@ -81,6 +89,34 @@ public class MetroFacade implements Subject {
         return metroCardDatabase;
     }
 
+    public double getPrice(boolean is24Min, boolean is64Plus, boolean isStudent,MetroCard metroCard) {
+        ArrayList<TicketPriceDiscountEnum> ticketPriceDiscountEnums = new ArrayList<>();
+        if(is24Min || is64Plus) {
+            ticketPriceDiscountEnums.add(TicketPriceDiscountEnum.AGE64DISCOUNT);
+        }
+        if(isStudent) {
+            ticketPriceDiscountEnums.add(TicketPriceDiscountEnum.STUDENTDISCOUNT);
+        }
+
+        TicketPrice ticketPrice = TicketPriceFactory.createTicketPrice(ticketPriceDiscountEnums, metroCard);
+        double price = ticketPrice.getPrice();
+        System.out.println(price);
+        return price;
+    }
+    public String getPriceText(boolean is24Min, boolean is64Plus, boolean isStudent, MetroCard metroCard) {
+        ArrayList<TicketPriceDiscountEnum> ticketPriceDiscountEnums = new ArrayList<>();
+        if(is24Min || is64Plus) {
+            ticketPriceDiscountEnums.add(TicketPriceDiscountEnum.AGE64DISCOUNT);
+        }
+        if(isStudent) {
+            ticketPriceDiscountEnums.add(TicketPriceDiscountEnum.STUDENTDISCOUNT);
+        }
+
+        TicketPrice ticketPrice = TicketPriceFactory.createTicketPrice(ticketPriceDiscountEnums, metroCard);
+        String price = ticketPrice.getPriceText();
+        System.out.println(price);
+        return price;
+    }
     public void setLoadSaveStrategy(LoadSaveStrategy strategy) {
         metroCardDatabase.setLoadSaveStrategy(strategy);
     }

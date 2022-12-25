@@ -4,6 +4,6 @@ public enum MetroEventsEnum {
 
     OPEN_METROSTATION,
     CLOSE_METROSTATION,
-    BUY_METROCARD;
-
+    BUY_METROCARD,
+    SCAN_METROGATE;
 }

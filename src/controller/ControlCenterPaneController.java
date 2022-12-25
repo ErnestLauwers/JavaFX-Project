@@ -3,6 +3,7 @@ package controller;
 import model.MetroEventsEnum;
 import model.MetroFacade;
 import model.Observer;
+import view.panels.ControlCenterPane;
 
 import java.io.IOException;
 
@@ -19,9 +20,14 @@ public class ControlCenterPaneController implements Observer {
         metroFacade.openMetroStation();
     }
 
-    public void setStationStatus() {
+    public void closeMetroStation() throws IOException {
+        metroFacade.closeMetroStation();
+    }
+
+    public void setStationStatus( ) {
         metroFacade.setStationStatus();
     }
+
 
     @Override
     public void update() {

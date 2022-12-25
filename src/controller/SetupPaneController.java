@@ -19,7 +19,7 @@ public class SetupPaneController implements Observer {
         this.metroFacade.registerObserver(MetroEventsEnum.OPEN_METROSTATION, this);
     }
 
-    public void save(String strategy) throws IOException {
+    public void save(String strategy, String kortingen) throws IOException {
         Properties properties = new Properties();
         InputStream inputStream;
         try {
@@ -29,6 +29,7 @@ public class SetupPaneController implements Observer {
             throw new RuntimeException(e);
         }
         properties.setProperty("LoadSaveStrategy", strategy);
+        properties.setProperty("Korting", kortingen);
         properties.store(new FileOutputStream("src/bestanden/settings.properties"), null);
     }
 
