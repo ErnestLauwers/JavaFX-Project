@@ -15,7 +15,7 @@ public class FrequentTravelDiscount extends TicketPriceDiscountDecorator {
 
     @Override
     public String getPriceText() {
-        return ticketPrice.getPriceText() + " (inc. frequent travel discount)";
+        return ticketPrice.getPriceText() + " - €0,2 Frequent Travel Discount";
     }
 }
 

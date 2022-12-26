@@ -35,6 +35,9 @@ public class MetroTicketViewController implements Observer {
         return metroFacade.getPriceText(is24Min, is64Plus, isStudent, metroCard);
     }
 
+    public void buyMetroCardTickets(int id , int amount){
+        metroFacade.buyMetroCardTickets(id, amount);
+    }
 
     @Override
     public void update() {

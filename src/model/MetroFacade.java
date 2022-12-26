@@ -13,6 +13,7 @@ import model.database.loadSaveStrategies.LoadSaveStrategyFactory;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -22,6 +23,9 @@ public class MetroFacade implements Subject {
     private Map<MetroEventsEnum, List<Observer>> observers;
     private boolean statusStation;
     private LoadSaveStrategyFactory loadSaveStrategyFactory;
+
+    private static final DecimalFormat df = new DecimalFormat("0.00");
+
 
     public MetroFacade() {
         observers = new HashMap<>();
@@ -69,6 +73,12 @@ public class MetroFacade implements Subject {
         notifyObservers(MetroEventsEnum.OPEN_METROSTATION);
     }
 
+    public void buyMetroCardTickets(int id, int amount){
+        MetroCard metroCard = metroCardDatabase.getMetroCard(id);
+        metroCard.setActiveRides(metroCard.getActiveRides() + amount);
+        notifyObservers(MetroEventsEnum.BUY_METROCARD_TICKETS);
+    }
+
     public void setStationStatus( ) {
         this.statusStation =  true;
     }
@@ -99,8 +109,8 @@ public class MetroFacade implements Subject {
         }
 
         TicketPrice ticketPrice = TicketPriceFactory.createTicketPrice(ticketPriceDiscountEnums, metroCard);
-        double price = ticketPrice.getPrice();
-        System.out.println(price);
+
+        double price = Double.parseDouble(df.format(ticketPrice.getPrice()));
         return price;
     }
     public String getPriceText(boolean is24Min, boolean is64Plus, boolean isStudent, MetroCard metroCard) {
@@ -114,7 +124,6 @@ public class MetroFacade implements Subject {
 
         TicketPrice ticketPrice = TicketPriceFactory.createTicketPrice(ticketPriceDiscountEnums, metroCard);
         String price = ticketPrice.getPriceText();
-        System.out.println(price);
         return price;
     }
     public void setLoadSaveStrategy(LoadSaveStrategy strategy) {

@@ -28,6 +28,10 @@ public class ControlCenterPaneController implements Observer {
         metroFacade.setStationStatus();
     }
 
+    public boolean getStationStatus() {
+        return metroFacade.getStationStatus();
+    }
+
 
     @Override
     public void update() {

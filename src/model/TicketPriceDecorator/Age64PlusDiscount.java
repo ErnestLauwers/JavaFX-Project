@@ -15,7 +15,7 @@ public class Age64PlusDiscount extends TicketPriceDiscountDecorator {
 
     @Override
     public String getPriceText() {
-        return ticketPrice.getPriceText() + " (inc. Age 64+ Discount)";
+        return ticketPrice.getPriceText() + " - €0.15 Age Discount";
     }
 
 }

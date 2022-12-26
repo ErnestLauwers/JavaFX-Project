@@ -8,7 +8,7 @@ public class BasicTicketPrice extends TicketPrice {
 
     @Override
     public String getPriceText() {
-        return "De prijs van een basis ticket is: " + getPrice();
+        return "Basic price of ride is €" + getPrice();
     }
 }
 

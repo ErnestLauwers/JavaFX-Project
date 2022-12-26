@@ -18,12 +18,14 @@ import java.util.Properties;
 public class SetupPane extends GridPane {
 
     private ChoiceBox<String> loadSavePreference;
-    private VBox kortingvbox;
     private Button saveButton;
-    CheckBox age64CheckBox = new CheckBox("64 plus korting");
-    CheckBox christmasBox = new CheckBox("Kerst korting");
-    CheckBox frequentTravelBox = new CheckBox("Frequent travel korting");
-    CheckBox studentBox = new CheckBox("Student korting");
+    private CheckBox age64CheckBox = new CheckBox("64 plus korting");
+    private CheckBox christmasBox = new CheckBox("Kerst korting");
+    private CheckBox frequentTravelBox = new CheckBox("Frequent travel korting");
+    private CheckBox studentBox = new CheckBox("Student korting");
+    private Label kortingLabel = new Label("Discounts:");
+    private Label loadSaveLabel = new Label("Load/Save preference:");
+    private Label confirmationLabel = new Label("");
     private SetupPaneController setupPaneController;
 
     public SetupPane(SetupPaneController setupPaneController) {
@@ -31,6 +33,11 @@ public class SetupPane extends GridPane {
         this.setPadding(new Insets(5, 5, 5, 5));
         this.setVgap(5);
         this.setHgap(5);
+
+        VBox mainvbox = new VBox();
+        mainvbox.setSpacing(10);
+
+        VBox loadSaveVBox = new VBox();
 
         Properties properties = new Properties();
         InputStream inputStream = null;
@@ -40,17 +47,19 @@ public class SetupPane extends GridPane {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        this.add(new Label("LoadSaveStrategy:"), 0, 0, 1, 1);
+        loadSaveVBox.getChildren().add(loadSaveLabel);
         loadSavePreference = new ChoiceBox<>();
         loadSavePreference.getItems().add("Text File");
         loadSavePreference.getItems().add("Excel File");
         loadSavePreference.setValue(properties.getProperty("LoadSaveStrategy"));
-        this.add(loadSavePreference, 0, 1);
+        loadSaveVBox.getChildren().add(loadSavePreference);
 
-
-        this.add(new Label("Kortingen:"), 0, 8, 1, 1);
-        kortingvbox = new VBox();
+        VBox kortingvbox = new VBox();
         kortingvbox.getChildren().addAll(age64CheckBox, christmasBox, frequentTravelBox, studentBox);
+
+        VBox kortingVBox = new VBox();
+        kortingVBox.getChildren().addAll(kortingLabel, kortingvbox);
+
 
         String korting = properties.getProperty("Korting");
 
@@ -73,7 +82,6 @@ public class SetupPane extends GridPane {
             }
         }
 
-        this.add(kortingvbox, 0, 9);
 
         saveButton = new Button("Save");
         saveButton.setOnAction(event -> {
@@ -99,11 +107,15 @@ public class SetupPane extends GridPane {
                     kortingoutput = String.join(",", kortingen);
 
                     setupPaneController.save(loadSavePreference.getValue(), kortingoutput);
+                    System.out.println("Saved");
+                    confirmationLabel.setText("Saved");
+                    kortingvbox.getChildren().add(confirmationLabel);
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         });
-        this.add(saveButton, 0, 10);
+        mainvbox.getChildren().addAll(loadSaveVBox, kortingVBox, saveButton);
+        this.add(mainvbox, 0, 0);
     }
 }

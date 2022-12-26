@@ -15,6 +15,6 @@ public class StudentDiscount extends TicketPriceDiscountDecorator {
 
     @Override
     public String getPriceText() {
-        return ticketPrice.getPriceText() + " (inc. Student Discount)";
+        return ticketPrice.getPriceText() + " - €0,25 Student Discount";
     }
 }

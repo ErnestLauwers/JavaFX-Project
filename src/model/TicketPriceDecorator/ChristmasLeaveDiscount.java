@@ -15,6 +15,6 @@ public class ChristmasLeaveDiscount extends TicketPriceDiscountDecorator {
 
     @Override
     public String getPriceText() {
-        return ticketPrice.getPriceText() + " (inc. Christmas Leave Discount)";
+        return ticketPrice.getPriceText() + " - €0,1 Christmas Leave Discount";
     }
 }

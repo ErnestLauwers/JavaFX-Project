@@ -27,15 +27,22 @@ public class ControlCenterPane extends GridPane {
         VBox vBox = new VBox();
         openMetroButton = new Button("Open Metrostation");
         vBox.getChildren().add(openMetroButton);
-        openMetroButton.setOnAction(event -> {
-            try {
-                controlCenterPaneController.openMetroStation();
-                controlCenterPaneController.setStationStatus();
-                Text confirmation = new Text("The Station is now opened.");
-                vBox.getChildren().add(confirmation);
 
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+        openMetroButton.setOnAction(event -> {
+            if(controlCenterPaneController.getStationStatus()) {
+                vBox.getChildren().add(new Text("The station is already open."));
+            }
+            else {
+                try {
+                    controlCenterPaneController.openMetroStation();
+                    controlCenterPaneController.setStationStatus();
+                    String open ="The Station is now opened.";
+                    Text confirmation = new Text(open);
+                    vBox.getChildren().add(confirmation);
+
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 
@@ -44,12 +51,12 @@ public class ControlCenterPane extends GridPane {
         closeMetroButton.setOnAction(event -> {
             try {
                 controlCenterPaneController.closeMetroStation();
-                Text confirmation = new Text("The Station is now closed.");
-                vBox.getChildren().remove(confirmation);
+                Platform.exit();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         });
+
 
         this.add(vBox, 0, 0);
     }
