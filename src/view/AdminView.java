@@ -4,6 +4,7 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import model.MetroFacade;
+import view.panels.AdminMainPane;
 
 public class AdminView {
 	private Stage stage = new Stage();

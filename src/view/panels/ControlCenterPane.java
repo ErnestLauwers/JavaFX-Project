@@ -51,7 +51,6 @@ public class ControlCenterPane extends GridPane {
         closeMetroButton.setOnAction(event -> {
             try {
                 controlCenterPaneController.closeMetroStation();
-                Platform.exit();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

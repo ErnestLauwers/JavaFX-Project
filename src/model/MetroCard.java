@@ -56,8 +56,4 @@ public class MetroCard {
     public int getUsedRides() {
         return this.usedRides;
     }
-
-    public double getPrijs() {
-        return 2.10;
-    }
 }

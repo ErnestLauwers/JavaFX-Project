@@ -2,6 +2,7 @@ package model.database.utilities;
 
 import jxl.read.biff.BiffException;
 import jxl.write.WriteException;
+import model.MetroCard;
 import model.database.utilities.ExcelPlugin;
 
 import java.io.File;
@@ -36,8 +37,14 @@ public abstract class ExcelLoadSaveTemplate<K, V> {
         try {
             map.forEach((key, value) -> {
                 ArrayList<String> arrayString = new ArrayList<>();
+                MetroCard metroCard = (MetroCard) value;
+                String date = metroCard.getDateOfCreation();
+                int activeRides = metroCard.getActiveRides();
+                int usedRides = metroCard.getUsedRides();
                 arrayString.add(String.valueOf(key));
-                arrayString.addAll(Arrays.asList(value.toString().split(";")));
+                arrayString.add(date);
+                arrayString.add(String.valueOf(activeRides));
+                arrayString.add(String.valueOf(usedRides));
                 array.add(arrayString);
             });
             excelPlugin.write(file, array);

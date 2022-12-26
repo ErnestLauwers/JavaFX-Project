@@ -143,7 +143,12 @@ public class MetroTicketView extends GridPane {
 		confirmButton.setOnAction(event -> {
 			int cardID = (int) allIds.getValue();
 			int aantalRitten = Integer.parseInt(numberOfRides.getText());
-			metroTicketViewController.buyMetroCardTickets(cardID, aantalRitten);
+			try {
+				metroTicketViewController.buyMetroCardTickets(cardID, aantalRitten);
+				System.out.println("Active rides: " + aantalRitten);
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
 		});
 
 		root.getChildren().addAll(mainGroup);

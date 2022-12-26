@@ -1,5 +1,7 @@
 package model.database.utilities;
 
+import model.MetroCard;
+
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,7 +31,11 @@ public abstract class TekstLoadSaveTemplate<K, V> {
         for (HashMap.Entry<K, V> entry : map.entrySet()) {
             String key = (String) entry.getKey();
             Object value = entry.getValue();
-            builder.append(key).append(";").append(value.toString()).append("\n");
+            MetroCard metroCard = (MetroCard) value;
+            String date = metroCard.getDateOfCreation();
+            int activeRides = metroCard.getActiveRides();
+            int usedRides = metroCard.getUsedRides();
+            builder.append(key).append(";").append(date).append(";").append(activeRides).append(";").append(usedRides).append("\n");
         }
         try {
             FileWriter myWriter = new FileWriter(file);
