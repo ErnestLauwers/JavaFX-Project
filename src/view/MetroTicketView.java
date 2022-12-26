@@ -43,7 +43,7 @@ public class MetroTicketView extends GridPane {
 	boolean ageDiscount = false;
 	boolean studentDiscount = false;
 	private Button saveButton = new Button("Save");
-	private Button confirmButton = new Button("Confirm Confirm request");
+	private Button confirmButton = new Button("Confirm request");
 	private Button cancelButton = new Button("Cancel request");
 
 	public MetroTicketView(MetroFacade facade){
@@ -114,11 +114,12 @@ public class MetroTicketView extends GridPane {
 			else {
 				studentDiscount = false;
 			}
-			if(min26CheckBox.isSelected() || plus64CheckBox.isSelected()) {
-				ageDiscount = true;
+
+			if(betweenCeckbox.isSelected()) {
+				ageDiscount = false;
 			}
 			else {
-				ageDiscount = false;
+				ageDiscount = true;
 			}
 
 			int cardID = (int) allIds.getValue();
@@ -213,9 +214,9 @@ public class MetroTicketView extends GridPane {
 		});
 
 		root.getChildren().addAll(mainGroup);
+		root.getStylesheets().add("application/application.css");
 
 		Scene scene = new Scene(root, 650, 350);
-		this.getStylesheets().add("application/application.css");
 		stage.setScene(scene);
 		stage.sizeToScene();
 		stage.show();

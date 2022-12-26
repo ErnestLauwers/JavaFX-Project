@@ -31,8 +31,8 @@ public class AdminMainPane extends BorderPane {
         Tab metroCardOverviewTab = new Tab("Metro cards overview", metroCardOverviewPane);
         Tab controlCenterTab = new Tab("Control Center", controlCenterPane);
         Tab setupTab = new Tab("Setup", setupPane);
-        tabPane.getTabs().add(metroCardOverviewTab);
         tabPane.getTabs().add(controlCenterTab);
+        tabPane.getTabs().add(metroCardOverviewTab);
         tabPane.getTabs().add(setupTab);
         this.setCenter(tabPane);
     }
