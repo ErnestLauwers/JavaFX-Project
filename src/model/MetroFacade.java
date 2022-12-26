@@ -77,6 +77,7 @@ public class MetroFacade implements Subject {
         MetroCard metroCard = metroCardDatabase.getMetroCard(id);
         metroCard.setActiveRides(metroCard.getActiveRides() + amount);
         notifyObservers(MetroEventsEnum.BUY_METROCARD_TICKETS);
+        notifyObservers(MetroEventsEnum.OPEN_METROSTATION);
     }
 
     public void setStationStatus( ) {

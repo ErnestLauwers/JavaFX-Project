@@ -28,6 +28,7 @@ public class MetroTicketView extends GridPane {
 	private double price;
 	private double totalPrice;
 	private Label totalPriceText = new Label("");
+	private Label errorText = new Label("");
 	private Button addButton;
 	private Label metroCardlbl = new Label("Metro card price is 15 euro - 2 free rides included");
 	private Label selectMetroCardlbl = new Label("Select metro card: ");
@@ -42,7 +43,8 @@ public class MetroTicketView extends GridPane {
 	boolean ageDiscount = false;
 	boolean studentDiscount = false;
 	private Button saveButton = new Button("Save");
-	private Button confirmButton = new Button("Confirm Purchase");
+	private Button confirmButton = new Button("Confirm Confirm request");
+	private Button cancelButton = new Button("Cancel request");
 
 	public MetroTicketView(MetroFacade facade){
 		this.metroTicketViewController = new MetroTicketViewController(facade, this);
@@ -102,6 +104,8 @@ public class MetroTicketView extends GridPane {
 		discountGroupHBox.getChildren().addAll(min26CheckBox,betweenCeckbox, plus64CheckBox);
 		newMetroCardGroup.getChildren().addAll(discountGroupHBox ,saveButton);
 
+		betweenCeckbox.setSelected(true);
+
 
 		saveButton.setOnAction(event -> {
 			if(studentCheckBox.isSelected()) {
@@ -118,19 +122,39 @@ public class MetroTicketView extends GridPane {
 			}
 
 			int cardID = (int) allIds.getValue();
+
 			MetroCard metroCard = MetroCardDatabase.getInstance().getMetroCard(cardID);
 
 			price = metroTicketViewController.getPrice(ageDiscount, ageDiscount, studentDiscount, metroCard);
 			System.out.println("Prijs per ticket: " + price);
-			totalPriceText.setText(metroTicketViewController.getPriceText(ageDiscount, ageDiscount, studentDiscount, metroCard));
 
-			int rides = Integer.parseInt(numberOfRides.getText());
 
-			totalPrice = price * rides;
-			System.out.println("Totaal: " + totalPrice);
-			System.out.println(totalPriceText);
+			if(numberOfRides.getText().isEmpty() || numberOfRides.getText().equals("0")) {
+				errorText.setText("Please enter a number of rides");
+				totalPriceText.setText("");
+			}
+			else {
+				errorText.setText("");
+				totalPriceText.setText(metroTicketViewController.getPriceText(ageDiscount, ageDiscount, studentDiscount, metroCard));
+				if(!numberOfRides.getText().matches("[0-9]*")){
+					errorText.setText("Please enter numbers only");
+				}
+				else {
+					errorText.setText("");
+					int rides = Integer.parseInt(numberOfRides.getText());
+					if(rides <= 0) {
+						errorText.setText("Number of rides must be higher than 0");
+					}
+					else {
+						errorText.setText("");
+						totalPrice = price * rides;
+						System.out.println("Totaal: " + totalPrice);
+						System.out.println(totalPriceText.getText());
 
-			priceText.setText(String.valueOf(totalPrice));
+						priceText.setText(String.valueOf(totalPrice));
+					}
+				}
+			}
 
 		});
 
@@ -138,17 +162,54 @@ public class MetroTicketView extends GridPane {
 			price = metroTicketViewController.getPrice(min26CheckBox.isSelected(), plus64CheckBox.isSelected(), studentCheckBox.isSelected(), MetroCardDatabase.getInstance().getMetroCard(allIds.getValue()));
 		}
 
-		priceGroup.getChildren().addAll(totalPricelbl, priceText, totalPriceText, confirmButton);
+		HBox concelHbox = new HBox();
+		concelHbox.setSpacing(5);
+		concelHbox.getChildren().addAll(confirmButton, cancelButton);
+
+		priceGroup.getChildren().addAll(totalPricelbl, priceText, totalPriceText, concelHbox, errorText);
 
 		confirmButton.setOnAction(event -> {
-			int cardID = (int) allIds.getValue();
-			int aantalRitten = Integer.parseInt(numberOfRides.getText());
-			try {
-				metroTicketViewController.buyMetroCardTickets(cardID, aantalRitten);
-				System.out.println("Active rides: " + aantalRitten);
-			} catch (IOException e) {
-				throw new RuntimeException(e);
+			if(totalPriceText.getText().isEmpty()) {
+				errorText.setText("Please save your request first");
 			}
+			else {
+				errorText.setText("");
+				int cardID = (int) allIds.getValue();
+				if(numberOfRides.getText().isEmpty()) {
+					errorText.setText("Please enter a number of rides.");
+				}
+				else {
+					errorText.setText("");
+				}
+				int aantalRitten = Integer.parseInt(numberOfRides.getText());
+
+				if(aantalRitten <= 0) {
+					errorText.setText("Number of rides must be higher than 0.");
+				}
+				else {
+					errorText.setText("");
+					try {
+						if(!MetroCardDatabase.getInstance().getMetroCard(cardID).isExpired()){
+							metroTicketViewController.buyMetroCardTickets(cardID, aantalRitten);
+							System.out.println("Active rides: " + aantalRitten);
+							resetForm();
+
+						}
+						else {
+							errorText.setText("This card is expired!");
+							System.out.println("Card is expired");
+						}
+
+					} catch (IOException e) {
+						throw new RuntimeException(e);
+					}
+				}
+			}
+
+		});
+
+		cancelButton.setOnAction(event -> {
+			resetForm();
 		});
 
 		root.getChildren().addAll(mainGroup);
@@ -164,5 +225,17 @@ public class MetroTicketView extends GridPane {
 		this.metroCardIds = FXCollections.observableArrayList(ids);
 		allIds.setItems(metroCardIds);
 		allIds.setValue(metroCardIds.get(0));
+	}
+
+	private void resetForm() {
+		allIds.setValue(1);
+		numberOfRides.clear();
+		studentCheckBox.setSelected(false);
+		min26CheckBox.setSelected(false);
+		plus64CheckBox.setSelected(false);
+		betweenCeckbox.setSelected(true);
+		priceText.clear();
+		totalPriceText.setText("");
+		errorText.setText("");
 	}
 }

@@ -1,5 +1,7 @@
 package model;
 
+import java.time.LocalDate;
+
 public class MetroCard {
     private int metroCardId;
     private String dateOfCreation;
@@ -55,5 +57,11 @@ public class MetroCard {
 
     public int getUsedRides() {
         return this.usedRides;
+    }
+
+    public boolean isExpired() {
+        int maand = Integer.parseInt(dateOfCreation.split("#")[0]);
+        int jaar = Integer.parseInt(dateOfCreation.split("#")[1]);
+        return LocalDate.now().isAfter(LocalDate.of(jaar, maand, 1).plusYears(1).plusMonths(1));
     }
 }
