@@ -1,5 +1,7 @@
 package view;
 
+import controller.ControlCenterPaneController;
+import controller.MetroStationViewController;
 import controller.MetroTicketViewController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -34,7 +36,7 @@ public class MetroTicketView extends GridPane {
 	private Label selectMetroCardlbl = new Label("Select metro card: ");
 	private Label numberOfRideslbl = new Label("Number of rides: ");
 	private Label totalPricelbl = new Label("Total price: ");
-	private TextField priceText = new TextField();
+	private TextField priceText = new TextField("0");
 	private CheckBox studentCheckBox = new CheckBox("Student?");
 	private ToggleGroup ageGroup = new ToggleGroup();
 	private RadioButton min26CheckBox = new RadioButton("younger than 26 years");
@@ -46,31 +48,49 @@ public class MetroTicketView extends GridPane {
 	private Button confirmButton = new Button("Confirm request");
 	private Button cancelButton = new Button("Cancel request");
 	private VBox mainGroup;
+	Group root = new Group();
 
 	public MetroTicketView(MetroFacade facade){
 		this.metroTicketViewController = new MetroTicketViewController(facade, this);
+
 		stage.setTitle("METROTICKET VIEW");
 		stage.initStyle(StageStyle.UTILITY);
 		stage.setX(5);
 		stage.setY(5);
 
-		Group root = new Group();
 		root.setLayoutX(15);
 		root.setLayoutY(15);
 
+		if(metroTicketViewController.getStatusStation()){
+			root.setDisable(false);
+			root.setStyle("-fx-opacity: 1; -fx-background-color: grey;");
+		}
+		else {
+			root.setDisable(false);
+			root.setStyle("-fx-opacity: 0.5; -fx-background-color: white;");
+		}
+
 		mainGroup = new VBox();
-		mainGroup.setSpacing(10);
 
 		VBox allIdsGroup = new VBox();
-		allIdsGroup.setSpacing(2);
 		mainGroup.getChildren().add(allIdsGroup);
 
+		VBox ticketGroup = new VBox();
+		ticketGroup.setSpacing(10);
+		ticketGroup.setStyle("-fx-padding: 10;" +
+				"-fx-border-style: solid inside;" +
+				"-fx-border-width: 2;" +
+				"-fx-border-insets: 5;" +
+				"-fx-border-radius: 5;" +
+				"-fx-border-color: grey;");
+
+		mainGroup.getChildren().add(ticketGroup);
+
+
 		VBox newMetroCardGroup = new VBox();
-		newMetroCardGroup.setSpacing(2);
-		mainGroup.getChildren().add(newMetroCardGroup);
+		newMetroCardGroup.setSpacing(5);
 
 		VBox priceGroup = new VBox();
-		priceGroup.setSpacing(2);
 		mainGroup.getChildren().add(priceGroup);
 
 		priceText.setEditable(false);
@@ -78,32 +98,48 @@ public class MetroTicketView extends GridPane {
 		allIds = new ChoiceBox<>();
 		addButton = new Button("New Metro Card");
 
+		errorText.setStyle("-fx-text-fill: red;");
+
 		addButton.setOnAction(event -> {
-			try {
-				metroTicketViewController.buyMetroCard();
-			} catch (IOException e) {
-				throw new RuntimeException(e);
+			if(metroTicketViewController.getStatusStation()){
+				try {
+					metroTicketViewController.buyMetroCard();
+				} catch (IOException e) {
+					throw new RuntimeException(e);
+				}
+			}
+			else {
+				errorText.setText("You can't buy a metro card when the station is closed");
 			}
 		});
 		HBox newButtonHbox = new HBox();
-		newButtonHbox.setSpacing(5);;
+
+		newButtonHbox.setSpacing(20);
 		newButtonHbox.getChildren().addAll(addButton, metroCardlbl);
 		allIdsGroup.getChildren().add(newButtonHbox);
 
-		newMetroCardGroup.getChildren().addAll(selectMetroCardlbl, allIds);
+		newButtonHbox.setStyle("-fx-alignment: center;");
+
+		metroCardlbl.setStyle("-fx-text-fill: blue;" + "-fx-font-size: 15;");
+
+		HBox selectMetroCardHbox = new HBox();
+		selectMetroCardHbox.setSpacing(20);
+		selectMetroCardHbox.getChildren().addAll(selectMetroCardlbl, allIds);
 
 		numberOfRides = new TextField();
-		newMetroCardGroup.getChildren().addAll(numberOfRideslbl, numberOfRides);
-		newMetroCardGroup.getChildren().addAll(studentCheckBox);
 
 		min26CheckBox.setToggleGroup(ageGroup);
 		plus64CheckBox.setToggleGroup(ageGroup);
 		betweenCheckbox.setToggleGroup(ageGroup);
 
 		HBox discountGroupHBox = new HBox();
-		discountGroupHBox.setSpacing(5);
+		discountGroupHBox.setSpacing(20);
 		discountGroupHBox.getChildren().addAll(min26CheckBox,betweenCheckbox, plus64CheckBox);
-		newMetroCardGroup.getChildren().addAll(discountGroupHBox ,saveButton);
+
+		HBox ridesHbox = new HBox();
+		ridesHbox.setSpacing(20);
+		ridesHbox.getChildren().addAll(numberOfRideslbl, numberOfRides);
+		newMetroCardGroup.getChildren().addAll(selectMetroCardHbox, ridesHbox,  studentCheckBox, discountGroupHBox ,saveButton);
 
 		betweenCheckbox.setSelected(true);
 
@@ -121,8 +157,14 @@ public class MetroTicketView extends GridPane {
 			else {
 				ageDiscount = true;
 			}
+			int cardID = 0;
 
-			int cardID = (int) allIds.getValue();
+			if(allIds.getValue() == null) {
+				errorText.setText("You have to select a metro card");
+			}
+			else {
+				cardID = allIds.getValue();
+			}
 
 			MetroCard metroCard = MetroCardDatabase.getInstance().getMetroCard(cardID);
 
@@ -135,11 +177,11 @@ public class MetroTicketView extends GridPane {
 			}
 			else {
 				errorText.setText("");
-				totalPriceText.setText(metroTicketViewController.getPriceText(ageDiscount, ageDiscount, studentDiscount, metroCard));
 				if(!numberOfRides.getText().matches("[0-9]*")){
 					errorText.setText("Please enter numbers only");
 				}
 				else {
+					totalPriceText.setText(metroTicketViewController.getPriceText(ageDiscount, ageDiscount, studentDiscount, metroCard));
 					errorText.setText("");
 					int rides = Integer.parseInt(numberOfRides.getText());
 					if(rides <= 0) {
@@ -148,7 +190,6 @@ public class MetroTicketView extends GridPane {
 					else {
 						errorText.setText("");
 						totalPrice = price * rides;
-
 						priceText.setText(String.valueOf(totalPrice));
 					}
 				}
@@ -160,57 +201,75 @@ public class MetroTicketView extends GridPane {
 			price = metroTicketViewController.getPrice(min26CheckBox.isSelected(), plus64CheckBox.isSelected(), studentCheckBox.isSelected(), MetroCardDatabase.getInstance().getMetroCard(allIds.getValue()));
 		}
 
-		HBox cancelHbox = new HBox();
-		cancelHbox.setSpacing(5);
-		cancelHbox.getChildren().addAll(confirmButton, cancelButton);
+		HBox concelHbox = new HBox();
+		concelHbox.setSpacing(20);
+		concelHbox.getChildren().addAll(confirmButton, cancelButton);
 
-		priceGroup.getChildren().addAll(totalPricelbl, priceText, totalPriceText, cancelHbox, errorText);
+		HBox priceTextHbox = new HBox();
+		priceTextHbox.setSpacing(20);
+		priceGroup.setStyle("-fx-padding: 10;" +
+				"-fx-border-style: solid inside;" +
+				"-fx-border-width: 2;" +
+				"-fx-border-insets: 5;" +
+				"-fx-border-radius: 5;" +
+				"-fx-border-color: grey;");
+		priceTextHbox.getChildren().addAll(totalPricelbl, priceText);
+
+		priceGroup.getChildren().addAll(priceTextHbox, totalPriceText, concelHbox, errorText);
+
+		ticketGroup.getChildren().addAll(newMetroCardGroup, priceGroup);
+
 
 		confirmButton.setOnAction(event -> {
-			if(totalPriceText.getText().isEmpty()) {
-				errorText.setText("Please save your request first");
-			}
-			else {
-				errorText.setText("");
-				int cardID = (int) allIds.getValue();
-				if(numberOfRides.getText().isEmpty()) {
-					errorText.setText("Please enter a number of rides.");
+			if(metroTicketViewController.getStatusStation() && allIds.getValue() != null){
+				if(totalPriceText.getText().isEmpty()) {
+					errorText.setText("Please save your request first");
 				}
 				else {
 					errorText.setText("");
-				}
-				int aantalRitten = Integer.parseInt(numberOfRides.getText());
+					int cardID = allIds.getValue();
+					if(numberOfRides.getText().isEmpty()) {
+						errorText.setText("Please enter a number of rides.");
+					}
+					else {
+						errorText.setText("");
+					}
+					int aantalRitten = Integer.parseInt(numberOfRides.getText());
 
-				if(aantalRitten <= 0) {
-					errorText.setText("Number of rides must be higher than 0.");
-				}
-				else {
-					errorText.setText("");
-					try {
-						if(!MetroCardDatabase.getInstance().getMetroCard(cardID).isExpired()){
-							metroTicketViewController.buyMetroCardTickets(cardID, aantalRitten, totalPrice);
-							resetForm();
+					if(aantalRitten <= 0) {
+						errorText.setText("Number of rides must be higher than 0.");
+					}
+					else {
+						errorText.setText("");
+						try {
+							if(!MetroCardDatabase.getInstance().getMetroCard(cardID).isExpired()){
+								metroTicketViewController.buyMetroCardTickets(cardID, aantalRitten, totalPrice);
+								resetForm();
 
+							}
+							else {
+								errorText.setText("This card is expired!");
+							}
+
+						} catch (IOException e) {
+							throw new RuntimeException(e);
 						}
-						else {
-							errorText.setText("This card is expired!");
-						}
-
-					} catch (IOException e) {
-						throw new RuntimeException(e);
 					}
 				}
 			}
-
+			else {
+				if(allIds.getValue() == null) {
+					errorText.setText("You have to select a metro card");
+				}
+				else{
+				errorText.setText("You can't buy a ticket because the station is closed.");
+				}
+			}
 		});
 
 		cancelButton.setOnAction(event -> {
 			resetForm();
 		});
-
-		if (!metroTicketViewController.getStatusStation()) {
-			mainGroup.setDisable(true);
-		}
 
 		root.getChildren().addAll(mainGroup);
 		root.getStylesheets().add("application/application.css");
@@ -225,21 +284,26 @@ public class MetroTicketView extends GridPane {
 		this.metroCardIds = FXCollections.observableArrayList(ids);
 		allIds.setItems(metroCardIds);
 		allIds.setValue(metroCardIds.get(0));
-		mainGroup.setDisable(false);
-	}
+		if(metroTicketViewController.getStatusStation()){
+			root.setDisable(false);
+			root.setStyle("-fx-opacity: 1; -fx-background-color: white;");
 
-	public void updateCloseStation() {
-		mainGroup.setDisable(true);
+		}
+		else {
+			root.setDisable(true);
+			root.setStyle("-fx-opacity: 0.5; -fx-background-color: white;");
+
+		}
 	}
 
 	private void resetForm() {
-		allIds.setValue(1);
-		numberOfRides.clear();
+		allIds.setValue(null);
+		numberOfRides.setText("0");
 		studentCheckBox.setSelected(false);
 		min26CheckBox.setSelected(false);
 		plus64CheckBox.setSelected(false);
 		betweenCheckbox.setSelected(true);
-		priceText.clear();
+		priceText.setText("0");
 		totalPriceText.setText("");
 		errorText.setText("");
 	}

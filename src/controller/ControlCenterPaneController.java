@@ -6,11 +6,16 @@ import model.Observer;
 import view.panels.ControlCenterPane;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
+
+import static java.lang.Math.round;
 
 public class ControlCenterPaneController implements Observer {
 
     private MetroFacade metroFacade;
     private ControlCenterPane controlCenterPane;
+    DecimalFormat df = new DecimalFormat("0.00");
+
 
     public ControlCenterPaneController(MetroFacade facade) {
         this.metroFacade = facade;
@@ -78,7 +83,7 @@ public class ControlCenterPaneController implements Observer {
         }
         if (event.equals(MetroEventsEnum.BUY_METROCARD_TICKETS.toString())) {
             int soldTickets = this.metroFacade.getSoldTickets();
-            double totalSoldTickets = this.metroFacade.getTotalPrice();
+            double totalSoldTickets = Double.parseDouble(df.format(this.metroFacade.getTotalPrice()));
             controlCenterPane.updateSoldTickets(soldTickets, totalSoldTickets);
         }
     }

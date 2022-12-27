@@ -152,6 +152,7 @@ public class MetroFacade implements Subject {
     public void buyMetroCardTickets(int id, int amount, double price){
         MetroCard metroCard = metroCardDatabase.getMetroCard(id);
         metroCard.setActiveRides(metroCard.getActiveRides() + amount);
+        metroCard.setDateOfCreation(LocalDate.now().getMonthValue() + "#" + LocalDate.now().getYear());
         totalAmountOfTickets += amount;
         totalPrice += price;
         notifyObservers(MetroEventsEnum.BUY_METROCARD_TICKETS);
