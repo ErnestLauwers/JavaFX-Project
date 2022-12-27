@@ -8,5 +8,6 @@ public enum MetroEventsEnum {
     INVALID_SCAN,
     ILLEGAL_WALKTHROUGH,
     WALKTHROUGH_GATE,
+    CLOSE_METROSTATION,
     SCAN_METROGATE;
 }

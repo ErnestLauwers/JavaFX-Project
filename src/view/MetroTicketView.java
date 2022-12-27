@@ -39,12 +39,13 @@ public class MetroTicketView extends GridPane {
 	private ToggleGroup ageGroup = new ToggleGroup();
 	private RadioButton min26CheckBox = new RadioButton("younger than 26 years");
 	private RadioButton plus64CheckBox = new RadioButton("older than 64 years");
-	private RadioButton betweenCeckbox = new RadioButton("between 26 and 64 years");
+	private RadioButton betweenCheckbox = new RadioButton("between 26 and 64 years");
 	boolean ageDiscount = false;
 	boolean studentDiscount = false;
 	private Button saveButton = new Button("Save");
 	private Button confirmButton = new Button("Confirm request");
 	private Button cancelButton = new Button("Cancel request");
+	private VBox mainGroup;
 
 	public MetroTicketView(MetroFacade facade){
 		this.metroTicketViewController = new MetroTicketViewController(facade, this);
@@ -57,7 +58,7 @@ public class MetroTicketView extends GridPane {
 		root.setLayoutX(15);
 		root.setLayoutY(15);
 
-		VBox mainGroup = new VBox();
+		mainGroup = new VBox();
 		mainGroup.setSpacing(10);
 
 		VBox allIdsGroup = new VBox();
@@ -97,15 +98,14 @@ public class MetroTicketView extends GridPane {
 
 		min26CheckBox.setToggleGroup(ageGroup);
 		plus64CheckBox.setToggleGroup(ageGroup);
-		betweenCeckbox.setToggleGroup(ageGroup);
+		betweenCheckbox.setToggleGroup(ageGroup);
 
 		HBox discountGroupHBox = new HBox();
 		discountGroupHBox.setSpacing(5);
-		discountGroupHBox.getChildren().addAll(min26CheckBox,betweenCeckbox, plus64CheckBox);
+		discountGroupHBox.getChildren().addAll(min26CheckBox,betweenCheckbox, plus64CheckBox);
 		newMetroCardGroup.getChildren().addAll(discountGroupHBox ,saveButton);
 
-		betweenCeckbox.setSelected(true);
-
+		betweenCheckbox.setSelected(true);
 
 		saveButton.setOnAction(event -> {
 			if(studentCheckBox.isSelected()) {
@@ -115,7 +115,7 @@ public class MetroTicketView extends GridPane {
 				studentDiscount = false;
 			}
 
-			if(betweenCeckbox.isSelected()) {
+			if(betweenCheckbox.isSelected()) {
 				ageDiscount = false;
 			}
 			else {
@@ -160,11 +160,11 @@ public class MetroTicketView extends GridPane {
 			price = metroTicketViewController.getPrice(min26CheckBox.isSelected(), plus64CheckBox.isSelected(), studentCheckBox.isSelected(), MetroCardDatabase.getInstance().getMetroCard(allIds.getValue()));
 		}
 
-		HBox concelHbox = new HBox();
-		concelHbox.setSpacing(5);
-		concelHbox.getChildren().addAll(confirmButton, cancelButton);
+		HBox cancelHbox = new HBox();
+		cancelHbox.setSpacing(5);
+		cancelHbox.getChildren().addAll(confirmButton, cancelButton);
 
-		priceGroup.getChildren().addAll(totalPricelbl, priceText, totalPriceText, concelHbox, errorText);
+		priceGroup.getChildren().addAll(totalPricelbl, priceText, totalPriceText, cancelHbox, errorText);
 
 		confirmButton.setOnAction(event -> {
 			if(totalPriceText.getText().isEmpty()) {
@@ -208,6 +208,10 @@ public class MetroTicketView extends GridPane {
 			resetForm();
 		});
 
+		if (!metroTicketViewController.getStatusStation()) {
+			mainGroup.setDisable(true);
+		}
+
 		root.getChildren().addAll(mainGroup);
 		root.getStylesheets().add("application/application.css");
 
@@ -221,6 +225,11 @@ public class MetroTicketView extends GridPane {
 		this.metroCardIds = FXCollections.observableArrayList(ids);
 		allIds.setItems(metroCardIds);
 		allIds.setValue(metroCardIds.get(0));
+		mainGroup.setDisable(false);
+	}
+
+	public void updateCloseStation() {
+		mainGroup.setDisable(true);
 	}
 
 	private void resetForm() {
@@ -229,7 +238,7 @@ public class MetroTicketView extends GridPane {
 		studentCheckBox.setSelected(false);
 		min26CheckBox.setSelected(false);
 		plus64CheckBox.setSelected(false);
-		betweenCeckbox.setSelected(true);
+		betweenCheckbox.setSelected(true);
 		priceText.clear();
 		totalPriceText.setText("");
 		errorText.setText("");

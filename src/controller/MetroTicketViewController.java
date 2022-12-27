@@ -21,6 +21,7 @@ public class MetroTicketViewController implements Observer {
         this.metroFacade.registerObserver(MetroEventsEnum.OPEN_METROSTATION, this);
         this.metroTicketView = metroTicketView;
         this.metroFacade.registerObserver(MetroEventsEnum.BUY_METROCARD, this);
+        this.metroFacade.registerObserver(MetroEventsEnum.CLOSE_METROSTATION, this);
     }
 
     public void buyMetroCard() throws IOException{
@@ -39,11 +40,18 @@ public class MetroTicketViewController implements Observer {
         metroFacade.buyMetroCardTickets(id, amount, totalPrice);
     }
 
+    public boolean getStatusStation() {
+        return metroFacade.getStationStatus();
+    }
+
     @Override
     public void update(String event) {
         if (event.equals(MetroEventsEnum.OPEN_METROSTATION.toString())) {
             ArrayList<Integer> metroCardsId = this.metroFacade.getMetroCardIDList();
             this.metroTicketView.updateMetroCardIDList(metroCardsId);
+        }
+        if (event.equals(MetroEventsEnum.CLOSE_METROSTATION.toString())) {
+            this.metroTicketView.updateCloseStation();
         }
     }
 }

@@ -68,6 +68,7 @@ public class MetroFacade implements Subject {
 
     public void closeMetroStation(){
         metroCardDatabase.save();
+        notifyObservers(MetroEventsEnum.CLOSE_METROSTATION);
     }
 
     public void scanMetroGate(int metroCardId, int gateId) {
@@ -134,7 +135,7 @@ public class MetroFacade implements Subject {
         String month = String.valueOf(LocalDate.now().getMonthValue());
         String year = String.valueOf(LocalDate.now().getYear());
         String dateOfCreation = month + "#" + year;
-        MetroCard newMetroCard = new MetroCard(newId, dateOfCreation, 5, 0);
+        MetroCard newMetroCard = new MetroCard(newId, dateOfCreation, 2, 0);
         metroCardDatabase.add(newMetroCard);
         notifyObservers(MetroEventsEnum.BUY_METROCARD);
         notifyObservers(MetroEventsEnum.OPEN_METROSTATION);

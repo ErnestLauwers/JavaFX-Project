@@ -25,7 +25,7 @@ public class ControlCenterPane extends GridPane {
     private int soldTickets;
     private double totalTickets;
     private Label ticketNumberLabel = new Label("Number of sold tickets:");
-    private Label ticketAmoundLabel = new Label("Total € amount of sold tickets:");
+    private Label ticketAmountLabel = new Label("Total € amount of sold tickets:");
     private TextField ticketNumberField = new TextField();
     private TextField ticketAmountField = new TextField();
     private Label metroStatus = new Label("");
@@ -97,7 +97,7 @@ public class ControlCenterPane extends GridPane {
         ticketVBox.setSpacing(20);
 
         ticketStat1HBox.getChildren().addAll(ticketNumberLabel, ticketNumberField);
-        ticketStat2HBox.getChildren().addAll(ticketAmoundLabel, ticketAmountField);
+        ticketStat2HBox.getChildren().addAll(ticketAmountLabel, ticketAmountField);
 
         ticketVBox.getChildren().addAll(ticketStat1HBox, ticketStat2HBox);
 
@@ -314,11 +314,8 @@ public class ControlCenterPane extends GridPane {
 
     public void updateScannedCards(int scanned1, int scanned2, int scanned3) {
         label1b.setText(String.valueOf(scanned1));
-        System.out.println(scanned1);
         label2b.setText(String.valueOf(scanned2));
-        System.out.println(scanned2);
         label3b.setText(String.valueOf(scanned3));
-        System.out.println(scanned3);
     }
 
     public void updateAlertsInvalid(int metroCardId, String gate) {

@@ -88,7 +88,6 @@ public class MetroStationView {
 
 		buttons1[1].setOnAction(event -> {
 			try {
-				System.out.println(metroStationViewController.getGateNow(1));
 				if (metroStationViewController.getGateNow(1).equals("Opened")) {
 					metroStationViewController.walkThroughGate(1);
 				}
@@ -102,8 +101,8 @@ public class MetroStationView {
 		});
 
 		if (!metroStationViewController.getStatusStation()) {
+			vbox1.setStyle("-fx-opacity: 0.5; -fx-background-color: orange;");
 			vbox1.setDisable(true);
-			vbox1.setStyle("-fx-opacity: 0.5; -fx-background-color: grey;");
 		}
 		if (metroStationViewController.getStatusStation() && metroStationViewController.getGateStatus(1)){
 			vbox1.setDisable(false);
@@ -163,7 +162,7 @@ public class MetroStationView {
 
 		if (!metroStationViewController.getStatusStation()) {
 			vbox2.setDisable(true);
-			vbox2.setStyle("-fx-opacity: 0.5; -fx-background-color: grey;");
+			vbox2.setStyle("-fx-opacity: 0.5; -fx-background-color: orange;");
 		}
 		if (metroStationViewController.getStatusStation() && metroStationViewController.getGateStatus(2)){
 			vbox2.setDisable(false);
@@ -223,7 +222,7 @@ public class MetroStationView {
 
 		if (!metroStationViewController.getStatusStation()) {
 			vbox3.setDisable(true);
-			vbox3.setStyle("-fx-opacity: 0.5; -fx-background-color: grey;");
+			vbox3.setStyle("-fx-opacity: 0.5; -fx-background-color: orange;");
 		}
 		if (metroStationViewController.getStatusStation() && metroStationViewController.getGateStatus(3)){
 			vbox3.setDisable(false);
@@ -250,6 +249,12 @@ public class MetroStationView {
 		stage.show();
 	}
 
+	public void updateCloseStation() {
+		vbox1.setDisable(true);
+		vbox2.setDisable(true);
+		vbox3.setDisable(true);
+	}
+
 	public void updateGates() {
 		vbox1.setDisable(false);
 		vbox1.setStyle("-fx-border-color: black; -fx-border-width: 2; -fx-border-radius: 5; -fx-padding: 20");
@@ -262,21 +267,21 @@ public class MetroStationView {
 			vbox1.setStyle("-fx-border-color: black; -fx-border-width: 2; -fx-border-radius: 5; -fx-padding: 20");
 		} else {
 			vbox1.setDisable(true);
-			vbox1.setStyle("-fx-border-color: black; -fx-border-width: 2; -fx-border-radius: 5; -fx-padding: 20; -fx-opacity: 0.5; -fx-background-color: grey; ");
+			vbox1.setStyle("-fx-border-color: black; -fx-border-width: 2; -fx-border-radius: 5; -fx-padding: 20; -fx-opacity: 0.5; -fx-background-color: orange; ");
 		}
 		if (metroStationViewController.getStatusStation() && metroStationViewController.getGateStatus(2)){
 			vbox2.setDisable(false);
 			vbox2.setStyle("-fx-border-color: black; -fx-border-width: 2; -fx-border-radius: 5; -fx-padding: 20");
 		} else {
 			vbox2.setDisable(true);
-			vbox2.setStyle("-fx-border-color: black; -fx-border-width: 2; -fx-border-radius: 5; -fx-padding: 20; -fx-opacity: 0.5; -fx-background-color: grey; ");
+			vbox2.setStyle("-fx-border-color: black; -fx-border-width: 2; -fx-border-radius: 5; -fx-padding: 20; -fx-opacity: 0.5; -fx-background-color: orange; ");
 		}
 		if (metroStationViewController.getStatusStation() && metroStationViewController.getGateStatus(3)){
 			vbox3.setDisable(false);
 			vbox3.setStyle("-fx-border-color: black; -fx-border-width: 2; -fx-border-radius: 5; -fx-padding: 20");
 		} else {
 			vbox3.setDisable(true);
-			vbox3.setStyle("-fx-border-color: black; -fx-border-width: 2; -fx-border-radius: 5; -fx-padding: 20; -fx-opacity: 0.5; -fx-background-color: grey; ");
+			vbox3.setStyle("-fx-border-color: black; -fx-border-width: 2; -fx-border-radius: 5; -fx-padding: 20; -fx-opacity: 0.5; -fx-background-color: orange; ");
 		}
 	}
 
@@ -334,5 +339,14 @@ public class MetroStationView {
 		checkBox2.setValue(metroCardIds.get(0));
 		checkBox3.setItems(metroCardIds);
 		checkBox3.setValue(metroCardIds.get(0));
+		if (metroStationViewController.getGateStatus(1)) {
+			vbox1.setDisable(false);
+		}
+		if (metroStationViewController.getGateStatus(2)) {
+			vbox2.setDisable(false);
+		}
+		if (metroStationViewController.getGateStatus(3)) {
+			vbox3.setDisable(false);
+		}
 	}
 }

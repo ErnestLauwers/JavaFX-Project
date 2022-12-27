@@ -21,6 +21,7 @@ public class MetroStationViewController implements Observer {
         this.metroFacade.registerObserver(MetroEventsEnum.ACTIVATE_METROGATE, this);
         this.metroFacade.registerObserver(MetroEventsEnum.INVALID_SCAN, this);
         this.metroFacade.registerObserver(MetroEventsEnum.WALKTHROUGH_GATE, this);
+        this.metroFacade.registerObserver(MetroEventsEnum.CLOSE_METROSTATION, this);
     }
 
     public boolean getStatusStation() {
@@ -65,6 +66,9 @@ public class MetroStationViewController implements Observer {
         }
         if (event.equals(MetroEventsEnum.WALKTHROUGH_GATE.toString())) {
             this.metroStationView.updateWalkThroughGate(getLastUsedGate());
+        }
+        if (event.equals(MetroEventsEnum.CLOSE_METROSTATION.toString())) {
+            this.metroStationView.updateCloseStation();
         }
     }
 }

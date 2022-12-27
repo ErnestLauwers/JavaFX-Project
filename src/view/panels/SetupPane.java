@@ -20,10 +20,6 @@ public class SetupPane extends GridPane {
 
     private ChoiceBox<String> loadSavePreference;
     private Button saveButton;
-//    private CheckBox age64CheckBox = new CheckBox("64 plus korting");
-//    private CheckBox christmasBox = new CheckBox("Kerst korting");
-//    private CheckBox frequentTravelBox = new CheckBox("Frequent travel korting");
-//    private CheckBox studentBox = new CheckBox("Student korting");
     private Label kortingLabel = new Label("Discounts:");
     private Label loadSaveLabel = new Label("Load/Save preference:");
     private Label confirmationLabel = new Label("");
@@ -54,12 +50,7 @@ public class SetupPane extends GridPane {
         loadSavePreference.getItems().add("Excel File");
         loadSavePreference.setValue(properties.getProperty("LoadSaveStrategy"));
         loadSaveVBox.getChildren().add(loadSavePreference);
-
-//        VBox kortingvbox = new VBox();
-//        kortingvbox.getChildren().addAll(age64CheckBox, christmasBox, frequentTravelBox, studentBox);
-//
         VBox kortingVBox = new VBox();
-//        kortingVBox.getChildren().addAll(kortingLabel, kortingvbox);
         kortingVBox.getChildren().addAll(kortingLabel);
 
         String korting = properties.getProperty("Korting");
@@ -78,31 +69,9 @@ public class SetupPane extends GridPane {
 
             if(kortingList.contains(ticketPriceDiscountEnum.toString())) {
                 checkBox.setSelected(true);
-                System.out.println(checkBox.getText());
             }
             kortingVBox.getChildren().add(checkBox);
         }
-
-
-//        for (String s : korting.split(",")) {
-//            System.out.println(s);
-//
-//            switch (s) {
-//                case "AGE64DISCOUNT":
-//                    age64CheckBox.setSelected(true);
-//                    break;
-//                case "CHRISTMASLEAVEDISCOUNT":
-//                    christmasBox.setSelected(true);
-//                    break;
-//                case "FREQUENTTRAVELLERDISCOUNT":
-//                    frequentTravelBox.setSelected(true);
-//                    break;
-//                case "STUDENTDISCOUNT":
-//                    studentBox.setSelected(true);
-//                    break;
-//            }
-//        }
-
 
         saveButton = new Button("Save");
         saveButton.setOnAction(event -> {
@@ -121,19 +90,6 @@ public class SetupPane extends GridPane {
                             }
                         }
                     }
-
-//                    if (age64CheckBox.isSelected()) {
-//                        kortingen.add("AGE64DISCOUNT");
-//                    }
-//                    if (christmasBox.isSelected()) {
-//                        kortingen.add("CHRISTMASLEAVEDISCOUNT");
-//                    }
-//                    if (frequentTravelBox.isSelected()) {
-//                        kortingen.add("FREQUENTTRAVELLERDISCOUNT");
-//                    }
-//                    if (studentBox.isSelected()) {
-//                        kortingen.add("STUDENTDISCOUNT");
-//                    }
                     kortingoutput = String.join(",", kortingen);
 
                     setupPaneController.save(loadSavePreference.getValue(), kortingoutput);
