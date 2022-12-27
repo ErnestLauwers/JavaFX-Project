@@ -1,27 +1,24 @@
 package controller;
 
-import model.MetroCard;
 import model.MetroEventsEnum;
 import model.MetroFacade;
 import model.Observer;
-import view.AdminView;
 import view.panels.ControlCenterPane;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 public class ControlCenterPaneController implements Observer {
 
     private MetroFacade metroFacade;
-    ControlCenterPane controlCenterPane;
+    private ControlCenterPane controlCenterPane;
 
     public ControlCenterPaneController(MetroFacade facade) {
         this.metroFacade = facade;
         this.metroFacade.registerObserver(MetroEventsEnum.OPEN_METROSTATION, this);
-    }
-
-    public void setControlCenterPane(ControlCenterPane controlCenterPane) {
-        this.controlCenterPane = controlCenterPane;
+        this.metroFacade.registerObserver(MetroEventsEnum.SCAN_METROGATE, this);
+        this.metroFacade.registerObserver(MetroEventsEnum.ILLEGAL_WALKTHROUGH, this);
+        this.metroFacade.registerObserver(MetroEventsEnum.INVALID_SCAN, this);
+        this.metroFacade.registerObserver(MetroEventsEnum.BUY_METROCARD_TICKETS, this);
     }
 
     public void openMetroStation() throws IOException {
@@ -32,7 +29,7 @@ public class ControlCenterPaneController implements Observer {
         metroFacade.closeMetroStation();
     }
 
-    public void setStationStatus( ) {
+    public void setStationStatus() {
         metroFacade.setStationStatus();
     }
 
@@ -47,18 +44,42 @@ public class ControlCenterPaneController implements Observer {
     public boolean getGateStatus(int gateId) {
         return metroFacade.getGateStatus(gateId);
     }
-    public int getSoldTickets() {
-        return metroFacade.getSoldTickets();
+
+    public int getScannedCards(int gateId) {
+        return this.metroFacade.getScannedCards(gateId);
     }
 
-    public double getTotalSoldTickets() {
-        return metroFacade.getTotalPrice();
+    public int getLastUsedGate() {
+        return metroFacade.getLastUsedGate();
+    }
+
+    public void setControlCenterPane(ControlCenterPane controlCenterPane) {
+        this.controlCenterPane = controlCenterPane;
+    }
+
+    public int getLastUsedCard() {
+        return metroFacade.getLastUsedCard();
+    }
+
+    public String getGateEvent(int gateId) {
+        return metroFacade.getGateEvent(gateId);
     }
 
     @Override
-    public void update() {
-        int soldTickets = this.metroFacade.getSoldTickets();
-        double totalSoldTickets = this.metroFacade.getTotalPrice();
-        controlCenterPane.updateSoldTickets(soldTickets, totalSoldTickets);
+    public void update(String event) {
+        if (event.equals(MetroEventsEnum.INVALID_SCAN.toString())) {
+            this.controlCenterPane.updateAlertsInvalid(getLastUsedCard(), getGateEvent(getLastUsedGate()));
+        }
+        if (event.equals(MetroEventsEnum.SCAN_METROGATE.toString())) {
+            this.controlCenterPane.updateScannedCards(getScannedCards(1), getScannedCards(2), getScannedCards(3));
+        }
+        if (event.equals(MetroEventsEnum.ILLEGAL_WALKTHROUGH.toString())) {
+            this.controlCenterPane.updateAlerts(getLastUsedGate());
+        }
+        if (event.equals(MetroEventsEnum.BUY_METROCARD_TICKETS.toString())) {
+            int soldTickets = this.metroFacade.getSoldTickets();
+            double totalSoldTickets = this.metroFacade.getTotalPrice();
+            controlCenterPane.updateSoldTickets(soldTickets, totalSoldTickets);
+        }
     }
 }

@@ -3,8 +3,6 @@ package view.panels;
 import controller.ControlCenterPaneController;
 import controller.MetroStationViewController;
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
@@ -14,20 +12,18 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import model.MetroCard;
-import model.MetroEventsEnum;
 import model.MetroFacade;
 import model.database.MetroCardDatabase;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 public class ControlCenterPane extends GridPane {
+
     private ControlCenterPaneController controlCenterPaneController;
     private Button openMetroButton;
     private Button closeMetroButton;
-    private int soldTickets = 0;
-    private double totalTickets = 0.0;
+    private int soldTickets;
+    private double totalTickets;
     private Label ticketNumberLabel = new Label("Number of sold tickets:");
     private Label ticketAmoundLabel = new Label("Total € amount of sold tickets:");
     private TextField ticketNumberField = new TextField();
@@ -63,8 +59,8 @@ public class ControlCenterPane extends GridPane {
                 if (controlCenterPaneController.getStatusStation()) {
                     metroStatus.setText("The station is already opened");
                 } else {
-                    controlCenterPaneController.openMetroStation();
                     controlCenterPaneController.setStationStatus();
+                    controlCenterPaneController.openMetroStation();
                     metroStatus.setText("The station is opened!");
                 }
             } catch (IOException e) {
@@ -78,8 +74,8 @@ public class ControlCenterPane extends GridPane {
                 if (!controlCenterPaneController.getStatusStation()) {
                     metroStatus.setText("The station is already closed!");
                 } else {
-                    controlCenterPaneController.closeMetroStation();
                     controlCenterPaneController.setStationStatus();
+                    controlCenterPaneController.closeMetroStation();
                     metroStatus.setText("The station has saved the data and is closed.");
 
                 }
@@ -100,7 +96,8 @@ public class ControlCenterPane extends GridPane {
         VBox ticketVBox = new VBox();
         ticketVBox.setSpacing(20);
 
-
+        ticketStat1HBox.getChildren().addAll(ticketNumberLabel, ticketNumberField);
+        ticketStat2HBox.getChildren().addAll(ticketAmoundLabel, ticketAmountField);
 
         ticketVBox.getChildren().addAll(ticketStat1HBox, ticketStat2HBox);
 
@@ -130,18 +127,21 @@ public class ControlCenterPane extends GridPane {
         textArea.setEditable(false);
         textArea.setScrollTop(0);
         textArea.setScrollLeft(0);
-        textArea.setText("!!Alerts!!");
+        textArea.setText("\n!!Alerts!!");
         this.add(textArea, 0, 3);
 
         buttons1[0].setOnAction(event -> {
             try {
-                if (controlCenterPaneController.getGateStatus(1)) {
-                    textArea.appendText("\nGate 1 is already activated");
+                if (!controlCenterPaneController.getStatusStation()) {
+                    textArea.insertText(0, "\nThe station must be open to activate a gate!");
+                }
+                else if (controlCenterPaneController.getGateStatus(1)) {
+                    textArea.insertText(0, "\nGate 1 is already activated");
                 } else {
                     controlCenterPaneController.setGateStatus(1);
                     label1.setText("Gate 1 / Active");
                     vbox1.setStyle("-fx-border-color: black; -fx-border-width: 2; -fx-border-radius: 5; -fx-padding: 20; -fx-background-color: white");
-                    textArea.appendText("\nGate 1 is activated");
+                    textArea.insertText(0, "\nGate 1 is activated");
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -150,13 +150,16 @@ public class ControlCenterPane extends GridPane {
 
         buttons1[1].setOnAction(event -> {
             try {
-                if (!controlCenterPaneController.getGateStatus(1)) {
-                    textArea.appendText("\nGate 1 is already deactivated");
+                if (!controlCenterPaneController.getStatusStation()) {
+                    textArea.insertText(0, "\nThe station must be open to deactivate a gate!");
+                }
+                else if (!controlCenterPaneController.getGateStatus(1)) {
+                    textArea.insertText(0, "\nGate 1 is already deactivated");
                 } else {
                     controlCenterPaneController.setGateStatus(1);
                     label1.setText("Gate 1 / Inactive");
                     vbox1.setStyle("-fx-border-color: black; -fx-border-width: 2; -fx-border-radius: 5; -fx-padding: 20; -fx-background-color: orange");
-                    textArea.appendText("\nGate 1 is deactivated");
+                    textArea.insertText(0, "\nGate 1 is deactivated");
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -189,13 +192,16 @@ public class ControlCenterPane extends GridPane {
 
         buttons2[0].setOnAction(event -> {
             try {
-                if (controlCenterPaneController.getGateStatus(2)) {
-                    textArea.appendText("\nGate 2 is already activated");
+                if (!controlCenterPaneController.getStatusStation()) {
+                    textArea.insertText(0, "\nThe station must be open to activate a gate!");
+                }
+                else if (controlCenterPaneController.getGateStatus(2)) {
+                    textArea.insertText(0, "\nGate 2 is already activated");
                 } else {
                     controlCenterPaneController.setGateStatus(2);
                     label2.setText("Gate 2 / Active");
                     vbox2.setStyle("-fx-border-color: black; -fx-border-width: 2; -fx-border-radius: 5; -fx-padding: 20; -fx-background-color: white");
-                    textArea.appendText("\nGate 2 is activated");
+                    textArea.insertText(0, "\nGate 2 is activated");
 
                 }
             } catch (IOException e) {
@@ -205,13 +211,16 @@ public class ControlCenterPane extends GridPane {
 
         buttons2[1].setOnAction(event -> {
             try {
-                if (!controlCenterPaneController.getGateStatus(2)) {
-                    textArea.appendText("\nGate 2 is already deactivated");
+                if (!controlCenterPaneController.getStatusStation()) {
+                    textArea.insertText(0, "\nThe station must be open to deactivate a gate!");
+                }
+                else if (!controlCenterPaneController.getGateStatus(2)) {
+                    textArea.insertText(0, "\nGate 2 is already deactivated");
                 } else {
                     controlCenterPaneController.setGateStatus(2);
                     label2.setText("Gate 2 / Inactive");
                     vbox2.setStyle("-fx-border-color: black; -fx-border-width: 2; -fx-border-radius: 5; -fx-padding: 20; -fx-background-color: orange");
-                    textArea.appendText("\nGate 2 is deactivated");
+                    textArea.insertText(0, "\nGate 2 is deactivated");
 
                 }
             } catch (IOException e) {
@@ -245,14 +254,17 @@ public class ControlCenterPane extends GridPane {
 
         buttons3[0].setOnAction(event -> {
             try {
-                if (controlCenterPaneController.getGateStatus(3)) {
-                    textArea.appendText("\nGate 3 is already activated");
+                if (!controlCenterPaneController.getStatusStation()) {
+                    textArea.insertText(0, "\nThe station must be open to activate a gate!");
+                }
+                else if (controlCenterPaneController.getGateStatus(3)) {
+                    textArea.insertText(0, "\nGate 3 is already activated");
 
                 } else {
                     controlCenterPaneController.setGateStatus(3);
                     label3.setText("Gate 3 / Active");
                     vbox3.setStyle("-fx-border-color: black; -fx-border-width: 2; -fx-border-radius: 5; -fx-padding: 20; -fx-background-color: white");
-                    textArea.appendText("\nGate 3 is activated");
+                    textArea.insertText(0, "\nGate 3 is activated");
 
                 }
             } catch (IOException e) {
@@ -262,13 +274,16 @@ public class ControlCenterPane extends GridPane {
 
         buttons3[1].setOnAction(event -> {
             try {
-                if (!controlCenterPaneController.getGateStatus(3)) {
-                    textArea.appendText("\nGate 3 is already deactivated");
+                if (!controlCenterPaneController.getStatusStation()) {
+                    textArea.insertText(0, "\nThe station must be open to deactivate a gate!");
+                }
+                else if (!controlCenterPaneController.getGateStatus(3)) {
+                    textArea.insertText(0, "\nGate 3 is already deactivated");
                 } else {
                     controlCenterPaneController.setGateStatus(3);
                     label3.setText("Gate 3 / Inactive");
                     vbox3.setStyle("-fx-border-color: black; -fx-border-width: 2; -fx-border-radius: 5; -fx-padding: 20; -fx-background-color: orange");
-                    textArea.appendText("\nGate 3 is deactivated");
+                    textArea.insertText(0, "\nGate 3 is deactivated");
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -291,16 +306,30 @@ public class ControlCenterPane extends GridPane {
         hBox.setStyle("-fx-border-color: black; -fx-border-width: 2; -fx-border-radius: 5; -fx-padding: 5");
         hBox.setSpacing(40);
 
-        ticketNumberField.setText(String.valueOf(soldTickets));
-        ticketAmountField.setText("€" + totalTickets);
-
-        ticketStat1HBox.getChildren().addAll(ticketNumberLabel, ticketNumberField);
-        ticketStat2HBox.getChildren().addAll(ticketAmoundLabel, ticketAmountField);
-
         this.add(hBox1, 0, 0);
         this.add(ticketVBox, 0, 1);
         this.add(hBox, 0, 2);
         this.getStylesheets().add("application/application.css");
+    }
+
+    public void updateScannedCards(int scanned1, int scanned2, int scanned3) {
+        label1b.setText(String.valueOf(scanned1));
+        System.out.println(scanned1);
+        label2b.setText(String.valueOf(scanned2));
+        System.out.println(scanned2);
+        label3b.setText(String.valueOf(scanned3));
+        System.out.println(scanned3);
+    }
+
+    public void updateAlertsInvalid(int metroCardId, String gate) {
+        if (gate.equals("expired")) {
+            System.out.println("A");
+            textArea.insertText(0, "\nCard " + metroCardId + " is expired!");
+        }
+        if (gate.equals("noRides")) {
+            System.out.println("B");
+            textArea.insertText(0, "\nCard " + metroCardId + " has no rides left!");
+        }
     }
 
     public void updateSoldTickets(int amount, double totalprice) {
@@ -308,5 +337,9 @@ public class ControlCenterPane extends GridPane {
         totalTickets = totalprice;
         ticketNumberField.setText(String.valueOf(soldTickets));
         ticketAmountField.setText("€" + totalTickets);
+    }
+
+    public void updateAlerts(int gate) {
+        textArea.insertText(0, "\nGate " + gate + " is illegally breached!");
     }
 }

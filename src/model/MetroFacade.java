@@ -26,6 +26,8 @@ public class MetroFacade implements Subject {
     private MetroStation metroStation;
     private int totalAmountOfTickets = 0;
     private double totalPrice = 0.0;
+    private int lastUsedGate;
+    private int lastUsedCard;
 
     private static final DecimalFormat df = new DecimalFormat("0.00");
 
@@ -36,6 +38,8 @@ public class MetroFacade implements Subject {
         statusStation = false;
         loadSaveStrategyFactory = new LoadSaveStrategyFactory();
         metroStation = new MetroStation();
+        lastUsedGate = 0;
+        lastUsedCard = 0;
 
         for (MetroEventsEnum event :  MetroEventsEnum.values()) {
             observers.put(event, new ArrayList<Observer>());
@@ -67,19 +71,62 @@ public class MetroFacade implements Subject {
     }
 
     public void scanMetroGate(int metroCardId, int gateId) {
-        if (!metroCardDatabase.validateMetroCard(metroCardId)) {
-            throw new IllegalArgumentException("This card is invalid!");
-        } else {
+        if (metroCardDatabase.validateMetroCard(metroCardId).equals("expired")) {
+            metroStation.setMetroGateEvent(gateId, "expired");
+            this.lastUsedGate = gateId;
+            this.lastUsedCard = metroCardId;
+            notifyObservers(MetroEventsEnum.INVALID_SCAN);
+        }
+        if (metroCardDatabase.validateMetroCard(metroCardId).equals("noRides")) {
+            metroStation.setMetroGateEvent(gateId,"noRides");
+            this.lastUsedGate = gateId;
+            this.lastUsedCard = metroCardId;
+            notifyObservers(MetroEventsEnum.INVALID_SCAN);
+        }
+        if (metroCardDatabase.validateMetroCard(metroCardId).equals("valid")){
+            metroCardDatabase.getMetroCard(metroCardId).setActiveRides(metroCardDatabase.getMetroCard(metroCardId).getActiveRides() - 1);
+            metroCardDatabase.getMetroCard(metroCardId).setUsedRides(metroCardDatabase.getMetroCard(metroCardId).getUsedRides() + 1);
             metroStation.scanMetroGate(gateId);
+            this.lastUsedGate = gateId;
+            this.lastUsedCard = metroCardId;
+            notifyObservers(MetroEventsEnum.SCAN_METROGATE);
         }
     }
 
     public void setGateStatus(int gateId) {
         metroStation.setGateStatus(gateId);
+        notifyObservers(MetroEventsEnum.ACTIVATE_METROGATE);
     }
 
     public boolean getGateStatus(int gateId) {
         return metroStation.getGateStatus(gateId);
+    }
+
+    public void walkThroughGate(int gateId) {
+        if (getGateNow(gateId).equals("Closed")) {
+            this.lastUsedGate = gateId;
+            notifyObservers(MetroEventsEnum.ILLEGAL_WALKTHROUGH);
+        } else {
+            this.lastUsedGate = gateId;
+            notifyObservers(MetroEventsEnum.WALKTHROUGH_GATE);
+            metroStation.walkThroughGate(gateId);
+        }
+    }
+
+    public int getLastUsedGate() {
+        return this.lastUsedGate;
+    }
+
+    public int getLastUsedCard() {
+        return this.lastUsedCard;
+    }
+
+    public String getGateNow(int gateId) {
+        return metroStation.getGateNow(gateId);
+    }
+
+    public String getGateEvent(int gateId) {
+        return metroStation.getGateEvent(gateId);
     }
 
     public void buyMetroCard() throws IOException{
@@ -92,6 +139,14 @@ public class MetroFacade implements Subject {
         notifyObservers(MetroEventsEnum.BUY_METROCARD);
         notifyObservers(MetroEventsEnum.OPEN_METROSTATION);
     }
+
+    public int getSoldTickets() {
+        return totalAmountOfTickets;
+    }
+    public double getTotalPrice() {
+        return totalPrice;
+    }
+
 
     public void buyMetroCardTickets(int id, int amount, double price){
         MetroCard metroCard = metroCardDatabase.getMetroCard(id);
@@ -108,6 +163,10 @@ public class MetroFacade implements Subject {
         } else {
             this.statusStation =  false;
         }
+    }
+
+    public int getScannedCards(int gateId) {
+        return this.metroStation.getScannedCards(gateId);
     }
 
     public boolean getStationStatus() {
@@ -153,15 +212,6 @@ public class MetroFacade implements Subject {
         String price = ticketPrice.getPriceText();
         return price;
     }
-
-    public int getSoldTickets() {
-        return totalAmountOfTickets;
-    }
-    public double getTotalPrice() {
-        return totalPrice;
-    }
-
-
     public void setLoadSaveStrategy(LoadSaveStrategy strategy) {
         metroCardDatabase.setLoadSaveStrategy(strategy);
     }
@@ -169,7 +219,7 @@ public class MetroFacade implements Subject {
     @Override
     public void notifyObservers(MetroEventsEnum event) {
         for (Observer observer : observers.get(event)) {
-            observer.update();
+            observer.update(event.toString());
         }
     }
 

@@ -40,8 +40,10 @@ public class MetroTicketViewController implements Observer {
     }
 
     @Override
-    public void update() {
-        ArrayList<Integer> metroCardsId = this.metroFacade.getMetroCardIDList();
-        this.metroTicketView.updateMetroCardIDList(metroCardsId);
+    public void update(String event) {
+        if (event.equals(MetroEventsEnum.OPEN_METROSTATION.toString())) {
+            ArrayList<Integer> metroCardsId = this.metroFacade.getMetroCardIDList();
+            this.metroTicketView.updateMetroCardIDList(metroCardsId);
+        }
     }
 }

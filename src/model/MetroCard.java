@@ -1,7 +1,5 @@
 package model;
 
-import model.TicketPriceDecorator.Age64PlusDiscount;
-
 import java.time.LocalDate;
 
 public class MetroCard {

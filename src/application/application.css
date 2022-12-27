@@ -1,3 +1,6 @@
+.vbox{
+    -fx-background-color: #a2a2a2;
+}
 .label1b{
     fx-border-color: black;
     -fx-border-width: 1;

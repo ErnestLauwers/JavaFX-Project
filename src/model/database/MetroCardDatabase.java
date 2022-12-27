@@ -49,19 +49,27 @@ public class MetroCardDatabase {
         this.loadSaveStrategy = strategy;
     }
 
-    public boolean validateMetroCard(int metroCardId) {
+    public String validateMetroCard(int metroCardId) {
         MetroCard scannedCard = getMetroCard(metroCardId);
-        int monthScanned = Integer.parseInt(scannedCard.getDateOfCreation().substring(0,2));
-        int yearScanned = Integer.parseInt(scannedCard.getDateOfCreation().substring(3));
         int monthNow = Integer.parseInt(String.valueOf(LocalDate.now().getMonthValue()));
         int yearNow = Integer.parseInt(String.valueOf(LocalDate.now().getYear()));
+        if (scannedCard.getDateOfCreation().length() == 7) {
+            int monthScanned = Integer.parseInt(scannedCard.getDateOfCreation().substring(0,2));
+            int yearScanned = Integer.parseInt(scannedCard.getDateOfCreation().substring(scannedCard.getDateOfCreation().length() - 4));
+            if (yearNow - yearScanned >= 2 || yearNow - yearScanned == 1 && monthNow - monthScanned >= 1) {
+                return "expired";
+            }
+        } else {
+            int monthScanned = Integer.parseInt(scannedCard.getDateOfCreation().substring(0,1));
+            int yearScanned = Integer.parseInt(scannedCard.getDateOfCreation().substring(scannedCard.getDateOfCreation().length() - 4));
+            if (yearNow - yearScanned >= 2 || yearNow - yearScanned == 1 && monthNow - monthScanned >= 1) {
+                return "expired";
+            }
+        }
         if (scannedCard.getActiveRides() <= 0) {
-            return false;
+            return "noRides";
         }
-        if (yearNow - yearScanned >= 2 || yearNow - yearScanned == 1 && monthNow - monthScanned >= 1) {
-            return false;
-        }
-        return true;
+        return "valid";
     }
 
     public static MetroCardDatabase getInstance() {

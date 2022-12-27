@@ -38,7 +38,7 @@ public class SetupPaneController implements Observer {
     }
 
     @Override
-    public void update() {
+    public void update(String event) {
 
     }
 }

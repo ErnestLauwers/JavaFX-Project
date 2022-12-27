@@ -26,6 +26,7 @@ public class MetroCardOverviewPaneController implements Observer {
         this.metroFacade.registerObserver(MetroEventsEnum.OPEN_METROSTATION, this);
         this.metroCardOverviewPane = metroCardOverviewPane;
         this.loadSaveStrategyFactory = new LoadSaveStrategyFactory();
+        this.metroFacade.registerObserver(MetroEventsEnum.SCAN_METROGATE, this);
     }
 
     public MetroCardDatabase getMetroCardsDatabase() {
@@ -48,7 +49,7 @@ public class MetroCardOverviewPaneController implements Observer {
     }
 
     @Override
-    public void update() {
+    public void update(String event) {
         ArrayList<MetroCard> metroCards = this.metroFacade.getMetroCardList();
         this.metroCardOverviewPane.updateMetroCardList(metroCards);
     }

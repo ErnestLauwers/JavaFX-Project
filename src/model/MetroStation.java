@@ -1,7 +1,5 @@
 package model;
 
-import model.metroGateStates.MetroGateState;
-
 import java.util.ArrayList;
 
 public class MetroStation {
@@ -16,23 +14,61 @@ public class MetroStation {
     }
 
     public void scanMetroGate(int gateId) {
-        /*if (gateId == 1) {
-            gate1.scanMetroGate();
+        for (MetroGate gate : metroGates) {
+            if (gate.getGateId() == gateId) {
+                gate.scanMetroGate();
+            }
         }
-        if (gateId == 2) {
-            gate2.scanMetroGate();
-        }
-        if (gateId == 3) {
-            gate3.scanMetroGate();
-        }*/
     }
 
+    public void walkThroughGate(int gateId) {
+        for (MetroGate gate : metroGates) {
+            if (gate.getGateId() == gateId) {
+                gate.walkThroughGate();
+            }
+        }
+    }
+
+    public void setMetroGateEvent(int gateId, String event) {
+        for (MetroGate gate : metroGates) {
+            if (gate.getGateId() == gateId) {
+                gate.setGateEvent(event);
+            }
+        }
+    }
     public void setGateStatus(int gateId) {
         for (MetroGate gate : metroGates) {
             if (gate.getGateId() == gateId) {
                 gate.setGateStatus();
             }
         }
+    }
+
+    public String getGateEvent(int gateId) {
+        for (MetroGate gate : metroGates) {
+            if (gate.getGateId() == gateId) {
+                return gate.getGateEvent();
+            }
+        }
+        return "";
+    }
+
+    public int getScannedCards(int gateId) {
+        for (MetroGate gate : metroGates) {
+            if (gate.getGateId() == gateId) {
+                return gate.getScannedCards();
+            }
+        }
+        return 0;
+    }
+
+    public String getGateNow(int gateId) {
+        for (MetroGate gate : metroGates) {
+            if (gate.getGateId() == gateId) {
+                return gate.getNow().getClass().getSimpleName();
+            }
+        }
+        return "";
     }
 
     public boolean getGateStatus(int gateId) {
