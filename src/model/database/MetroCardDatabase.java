@@ -8,6 +8,7 @@ import model.database.loadSaveStrategies.LoadSaveStrategyFactory;
 import model.MetroCard;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -46,6 +47,21 @@ public class MetroCardDatabase {
 
     public void setLoadSaveStrategy(LoadSaveStrategy strategy) {
         this.loadSaveStrategy = strategy;
+    }
+
+    public boolean validateMetroCard(int metroCardId) {
+        MetroCard scannedCard = getMetroCard(metroCardId);
+        int monthScanned = Integer.parseInt(scannedCard.getDateOfCreation().substring(0,2));
+        int yearScanned = Integer.parseInt(scannedCard.getDateOfCreation().substring(3));
+        int monthNow = Integer.parseInt(String.valueOf(LocalDate.now().getMonthValue()));
+        int yearNow = Integer.parseInt(String.valueOf(LocalDate.now().getYear()));
+        if (scannedCard.getActiveRides() <= 0) {
+            return false;
+        }
+        if (yearNow - yearScanned >= 2 || yearNow - yearScanned == 1 && monthNow - monthScanned >= 1) {
+            return false;
+        }
+        return true;
     }
 
     public static MetroCardDatabase getInstance() {

@@ -23,6 +23,7 @@ public class MetroFacade implements Subject {
     private Map<MetroEventsEnum, List<Observer>> observers;
     private boolean statusStation;
     private LoadSaveStrategyFactory loadSaveStrategyFactory;
+    private MetroStation metroStation;
 
     private static final DecimalFormat df = new DecimalFormat("0.00");
 
@@ -32,6 +33,7 @@ public class MetroFacade implements Subject {
         metroCardDatabase = MetroCardDatabase.getInstance();
         statusStation = false;
         loadSaveStrategyFactory = new LoadSaveStrategyFactory();
+        metroStation = new MetroStation();
 
         for (MetroEventsEnum event :  MetroEventsEnum.values()) {
             observers.put(event, new ArrayList<Observer>());
@@ -62,6 +64,22 @@ public class MetroFacade implements Subject {
         metroCardDatabase.save();
     }
 
+    public void scanMetroGate(int metroCardId, int gateId) {
+        if (!metroCardDatabase.validateMetroCard(metroCardId)) {
+            throw new IllegalArgumentException("This card is invalid!");
+        } else {
+            metroStation.scanMetroGate(gateId);
+        }
+    }
+
+    public void setGateStatus(int gateId) {
+        metroStation.setGateStatus(gateId);
+    }
+
+    public boolean getGateStatus(int gateId) {
+        return metroStation.getGateStatus(gateId);
+    }
+
     public void buyMetroCard() throws IOException{
         int newId = metroCardDatabase.getNewId();
         String month = String.valueOf(LocalDate.now().getMonthValue());
@@ -81,7 +99,11 @@ public class MetroFacade implements Subject {
     }
 
     public void setStationStatus( ) {
-        this.statusStation =  true;
+        if (!statusStation) {
+            this.statusStation =  true;
+        } else {
+            this.statusStation =  false;
+        }
     }
 
     public boolean getStationStatus() {
