@@ -3,6 +3,8 @@ package view.panels;
 import controller.ControlCenterPaneController;
 import controller.MetroStationViewController;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
@@ -12,18 +14,20 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import model.MetroCard;
+import model.MetroEventsEnum;
 import model.MetroFacade;
 import model.database.MetroCardDatabase;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class ControlCenterPane extends GridPane {
-
     private ControlCenterPaneController controlCenterPaneController;
     private Button openMetroButton;
     private Button closeMetroButton;
-    private int soldTickets;
-    private double totalTickets;
+    private int soldTickets = 0;
+    private double totalTickets = 0.0;
     private Label ticketNumberLabel = new Label("Number of sold tickets:");
     private Label ticketAmoundLabel = new Label("Total € amount of sold tickets:");
     private TextField ticketNumberField = new TextField();
@@ -45,6 +49,7 @@ public class ControlCenterPane extends GridPane {
 
     public ControlCenterPane(ControlCenterPaneController controlCenterPaneController) {
         this.controlCenterPaneController = controlCenterPaneController;
+        controlCenterPaneController.setControlCenterPane(this);
         this.setPadding(new Insets(5, 5, 5, 5));
         this.setVgap(5);
         this.setHgap(5);
@@ -95,8 +100,7 @@ public class ControlCenterPane extends GridPane {
         VBox ticketVBox = new VBox();
         ticketVBox.setSpacing(20);
 
-        ticketStat1HBox.getChildren().addAll(ticketNumberLabel, ticketNumberField);
-        ticketStat2HBox.getChildren().addAll(ticketAmoundLabel, ticketAmountField);
+
 
         ticketVBox.getChildren().addAll(ticketStat1HBox, ticketStat2HBox);
 
@@ -287,9 +291,22 @@ public class ControlCenterPane extends GridPane {
         hBox.setStyle("-fx-border-color: black; -fx-border-width: 2; -fx-border-radius: 5; -fx-padding: 5");
         hBox.setSpacing(40);
 
+        ticketNumberField.setText(String.valueOf(soldTickets));
+        ticketAmountField.setText("€" + totalTickets);
+
+        ticketStat1HBox.getChildren().addAll(ticketNumberLabel, ticketNumberField);
+        ticketStat2HBox.getChildren().addAll(ticketAmoundLabel, ticketAmountField);
 
         this.add(hBox1, 0, 0);
         this.add(ticketVBox, 0, 1);
         this.add(hBox, 0, 2);
+        this.getStylesheets().add("application/application.css");
+    }
+
+    public void updateSoldTickets(int amount, double totalprice) {
+        soldTickets = amount;
+        totalTickets = totalprice;
+        ticketNumberField.setText(String.valueOf(soldTickets));
+        ticketAmountField.setText("€" + totalTickets);
     }
 }

@@ -24,6 +24,8 @@ public class MetroFacade implements Subject {
     private boolean statusStation;
     private LoadSaveStrategyFactory loadSaveStrategyFactory;
     private MetroStation metroStation;
+    private int totalAmountOfTickets = 0;
+    private double totalPrice = 0.0;
 
     private static final DecimalFormat df = new DecimalFormat("0.00");
 
@@ -91,9 +93,11 @@ public class MetroFacade implements Subject {
         notifyObservers(MetroEventsEnum.OPEN_METROSTATION);
     }
 
-    public void buyMetroCardTickets(int id, int amount){
+    public void buyMetroCardTickets(int id, int amount, double price){
         MetroCard metroCard = metroCardDatabase.getMetroCard(id);
         metroCard.setActiveRides(metroCard.getActiveRides() + amount);
+        totalAmountOfTickets += amount;
+        totalPrice += price;
         notifyObservers(MetroEventsEnum.BUY_METROCARD_TICKETS);
         notifyObservers(MetroEventsEnum.OPEN_METROSTATION);
     }
@@ -149,6 +153,15 @@ public class MetroFacade implements Subject {
         String price = ticketPrice.getPriceText();
         return price;
     }
+
+    public int getSoldTickets() {
+        return totalAmountOfTickets;
+    }
+    public double getTotalPrice() {
+        return totalPrice;
+    }
+
+
     public void setLoadSaveStrategy(LoadSaveStrategy strategy) {
         metroCardDatabase.setLoadSaveStrategy(strategy);
     }

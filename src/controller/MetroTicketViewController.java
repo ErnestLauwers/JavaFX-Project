@@ -35,8 +35,8 @@ public class MetroTicketViewController implements Observer {
         return metroFacade.getPriceText(is24Min, is64Plus, isStudent, metroCard);
     }
 
-    public void buyMetroCardTickets(int id , int amount) throws IOException{
-        metroFacade.buyMetroCardTickets(id, amount);
+    public void buyMetroCardTickets(int id , int amount, double totalPrice) throws IOException{
+        metroFacade.buyMetroCardTickets(id, amount, totalPrice);
     }
 
     @Override

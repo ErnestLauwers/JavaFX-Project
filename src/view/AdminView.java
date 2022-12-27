@@ -1,10 +1,13 @@
 package view;
 
+import javafx.collections.FXCollections;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import model.MetroFacade;
 import view.panels.AdminMainPane;
+
+import java.util.ArrayList;
 
 public class AdminView {
 	private Stage stage = new Stage();

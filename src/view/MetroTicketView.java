@@ -14,6 +14,7 @@ import javafx.stage.StageStyle;
 import model.MetroCard;
 import model.MetroFacade;
 import model.database.MetroCardDatabase;
+import view.panels.ControlCenterPane;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -191,10 +192,9 @@ public class MetroTicketView extends GridPane {
 					errorText.setText("");
 					try {
 						if(!MetroCardDatabase.getInstance().getMetroCard(cardID).isExpired()){
-							metroTicketViewController.buyMetroCardTickets(cardID, aantalRitten);
+							metroTicketViewController.buyMetroCardTickets(cardID, aantalRitten, totalPrice);
 							System.out.println("Active rides: " + aantalRitten);
 							resetForm();
-
 						}
 						else {
 							errorText.setText("This card is expired!");
