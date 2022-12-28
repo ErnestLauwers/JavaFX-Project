@@ -1,3 +1,7 @@
+/**
+ * @author Benjamin Joossens
+ */
+
 package view;
 
 import controller.ControlCenterPaneController;
@@ -20,7 +24,9 @@ import model.database.MetroCardDatabase;
 import java.io.IOException;
 import java.util.ArrayList;
 
+
 public class MetroTicketView extends GridPane {
+
 
 	private Stage stage = new Stage();
 	private MetroTicketViewController metroTicketViewController;

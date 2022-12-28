@@ -1,3 +1,6 @@
+/**
+ * @author Benjamin Joossens
+ */
 package controller;
 
 import jxl.read.biff.BiffException;

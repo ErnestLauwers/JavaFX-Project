@@ -1,3 +1,6 @@
+/**
+ * @author Benjamin Joossens
+ */
 package model.TicketPriceDecorator;
 
 import model.MetroCard;

@@ -1,3 +1,6 @@
+/**
+ * @author Benjamin Joossens
+ */
 package view.panels;
 
 import application.MetroMain;

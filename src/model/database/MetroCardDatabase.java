@@ -1,3 +1,6 @@
+/**
+ * @author Benjamin Joossens
+ */
 package model.database;
 
 import application.MetroMain;

@@ -1,3 +1,6 @@
+/**
+ * @author Benjamin Joossens
+ */
 package model;
 
 import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
