@@ -284,6 +284,7 @@ public class MetroTicketView extends GridPane {
 		this.metroCardIds = FXCollections.observableArrayList(ids);
 		allIds.setItems(metroCardIds);
 		allIds.setValue(metroCardIds.get(0));
+		mainGroup.setDisable(false);
 		if(metroTicketViewController.getStatusStation()){
 			root.setDisable(false);
 			root.setStyle("-fx-opacity: 1; -fx-background-color: white;");
@@ -294,6 +295,10 @@ public class MetroTicketView extends GridPane {
 			root.setStyle("-fx-opacity: 0.5; -fx-background-color: white;");
 
 		}
+	}
+
+	public void updateCloseStation() {
+		mainGroup.setDisable(true);
 	}
 
 	private void resetForm() {
