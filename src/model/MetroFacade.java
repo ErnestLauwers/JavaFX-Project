@@ -1,11 +1,9 @@
 /**
  * @author Benjamin Joossens
+ * @author Ernest Lauwers
  */
 package model;
 
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
-import jxl.read.biff.BiffException;
-import jxl.write.WriteException;
 import model.TicketPriceDecorator.TicketPrice;
 import model.TicketPriceDecorator.TicketPriceDiscountEnum;
 import model.TicketPriceDecorator.TicketPriceFactory;

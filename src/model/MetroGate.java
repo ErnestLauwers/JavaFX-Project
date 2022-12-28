@@ -1,3 +1,6 @@
+/**
+ * @author Ernest Lauwers
+ */
 package model;
 
 import model.metroGateStates.Closed;

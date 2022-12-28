@@ -1,3 +1,6 @@
+/**
+ * @author Ernest Lauwers
+ */
 package model.database.utilities;
 
 import jxl.read.biff.BiffException;

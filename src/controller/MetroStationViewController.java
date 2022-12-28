@@ -1,3 +1,6 @@
+/**
+ * @author Ernest Lauwers
+ */
 package controller;
 
 import model.MetroEventsEnum;

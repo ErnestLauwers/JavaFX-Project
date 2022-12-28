@@ -1,5 +1,6 @@
 /**
  * @author Benjamin Joossens
+ * @author Ernest Lauwers
  */
 package model.database;
 

@@ -1,6 +1,8 @@
+/**
+ * @author Ernest Lauwers
+ */
 package application;
 
-import controller.*;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import model.MetroFacade;

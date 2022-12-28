@@ -1,3 +1,6 @@
+/**
+ * @author Ernest Lauwers
+ */
 package view;
 
 import controller.MetroStationViewController;

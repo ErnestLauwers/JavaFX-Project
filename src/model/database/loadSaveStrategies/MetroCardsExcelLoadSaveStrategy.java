@@ -1,3 +1,6 @@
+/**
+ * @author Ernest Lauwers
+ */
 package model.database.loadSaveStrategies;
 
 import model.MetroCard;
